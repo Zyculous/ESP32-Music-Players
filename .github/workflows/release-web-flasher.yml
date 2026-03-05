@@ -33,7 +33,7 @@ jobs:
           esp_idf_version: v5.5.3
           target: esp32
           path: .
-          command: ./.github/scripts/build-web-flasher-site.sh
+          command: bash ./.github/scripts/build-web-flasher-site.sh
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
