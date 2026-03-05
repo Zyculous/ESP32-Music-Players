@@ -1,2 +1,71 @@
-CYD-BT/build/log/
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*.log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# ESP-IDF / CMake / Ninja build outputs (keep local, don't track)
+build/
+CYD-BT/build/
+S3-BT/build/
+**/build/
+
+*.elf
+*.map
+*.obj
+*.o
+*.a
+*.d
+*.tmp
+*.bin
+
+.ninja_deps
+.ninja_log
+.bin_timestamp
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+build.ninja
+rules.ninja
+TargetDirectories.txt
+compile_commands.json
+
+config.env
+flash_args
+flash_args.in
+flash_*_args
+app-flash_args
+bootloader-flash_args
+partition-table-flash_args
+flasher_args.json
+project_description.json
+project_elf_src_*.c
+
+log/
+**/log/
+
+# Local/derived config backups
+sdkconfig.old
+**/sdkconfig.old
+
+# Keep prebuilt firmware assets for web flasher
+!web-flasher/firmware/
+!web-flasher/firmware/**
+
+# Keep source tree for app + web flasher + workflows
+!CYD-BT/**/*.c
+!CYD-BT/**/*.h
+!CYD-BT/**/*.yml
+!CYD-BT/**/*.yaml
+!S3-BT/main/**/*.c
+!S3-BT/main/**/*.h
+!S3-BT/main/**/*.yml
+!S3-BT/main/**/*.yaml
+!web-flasher/**
+!.github/**
 
