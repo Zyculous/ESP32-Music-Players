@@ -1,0 +1,147 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --panel: #171a21;
+  --panel-border: #2a3040;
+  --text: #edf0f7;
+  --muted: #aab3c5;
+  --accent: #4c8dff;
+  --accent-strong: #7aa9ff;
+  --danger: #ff7a7a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at 20% 0%, #1b2233 0%, var(--bg) 45%);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height: 1.45;
+}
+
+.container {
+  width: min(1100px, 94vw);
+  margin: 28px auto 48px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.7rem, 2.7vw, 2.3rem);
+}
+
+.subtitle {
+  margin: 0 0 20px;
+  color: var(--muted);
+}
+
+.card {
+  background: linear-gradient(180deg, #1a1e28 0%, var(--panel) 100%);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 18px;
+  margin: 14px 0;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+}
+
+.row,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  background: #10141d;
+  color: var(--text);
+  border: 1px solid #2f3548;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+input[type="file"] {
+  width: 100%;
+  color: var(--muted);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--accent);
+}
+
+textarea {
+  margin-top: 12px;
+  resize: vertical;
+  min-height: 220px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+button {
+  border: 1px solid #2f446d;
+  background: linear-gradient(180deg, var(--accent) 0%, #2f6fdb 100%);
+  color: #f4f8ff;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: linear-gradient(180deg, var(--accent-strong) 0%, #4586f2 100%);
+}
+
+.note {
+  margin: 8px 0 12px;
+  color: var(--muted);
+}
+
+#firmwareStatus,
+#customScriptStatus {
+  min-height: 1.3em;
+}
+
+esp-web-install-button {
+  display: inline-block;
+  margin-top: 4px;
+}
+
+@media (max-width: 700px) {
+  .container {
+    width: min(100%, 96vw);
+    margin-top: 16px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+}
