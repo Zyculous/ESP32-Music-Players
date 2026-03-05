@@ -1,0 +1,84 @@
+Command: ninja flash
+[1/5] cd "/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/esp-idf/esptool_py" && /home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python /home/zander/Code\ Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/zander/Code\ Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/partition_table/partition-table.bin /home/zander/Code\ Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/bluetooth_music_player_es3c28p.bin
+bluetooth_music_player_es3c28p.bin binary size 0x101e20 bytes. Smallest app partition is 0x177000 bytes. 0x751e0 bytes (31%) free.
+[2/5] Performing build step for 'bootloader'
+[1/1] cd "/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/bootloader/esp-idf/esptool_py" && /home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python /home/zander/Code\ Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 /home/zander/Code\ Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/bootloader/bootloader.bin
+Bootloader binary size 0x5160 bytes. 0x2ea0 bytes (36%) free.
+[3/5] No install step for 'bootloader'
+[4/5] Completed 'bootloader'
+[4/5] cd "/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/components/esptool_py" && /home/zander/.espressif/tools/cmake/3.30.2/bin/cmake -D "IDF_PATH=/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3" -D "SERIAL_TOOL=/home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python;;/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/components/esptool_py/esptool/esptool.py;--chip;esp32s3" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D "WORKING_DIRECTORY=/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build" -P "/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/components/esptool_py/run_serial_tool.cmake"
+esptool.py --chip esp32s3 -p /dev/ttyUSB0 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 2MB 0x0 bootloader/bootloader.bin 0x10000 bluetooth_music_player_es3c28p.bin 0x8000 partition_table/partition-table.bin
+esptool.py v4.12.dev1
+Serial port /dev/ttyUSB0
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded PSRAM 8MB (AP_3v3)
+Crystal is 40MHz
+MAC: 3c:0f:02:dd:b5:30
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00005fff...
+Flash will be erased from 0x00010000 to 0x00111fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+SHA digest in image updated
+Compressed 20832 bytes to 13346...
+Writing at 0x00000000... (100 %)
+Wrote 20832 bytes (13346 compressed) at 0x00000000 in 0.7 seconds (effective 230.7 kbit/s)...
+Hash of data verified.
+Compressed 1056288 bytes to 692525...
+Writing at 0x00010000... (2 %)
+Writing at 0x0001cba3... (4 %)
+Writing at 0x00029f71... (6 %)
+Writing at 0x0003189c... (9 %)
+Writing at 0x0003db7f... (11 %)
+Writing at 0x00044308... (13 %)
+Writing at 0x00049c51... (16 %)
+Writing at 0x0004f75c... (18 %)
+Writing at 0x00054a84... (20 %)
+Writing at 0x00059ba9... (23 %)
+Writing at 0x0005feef... (25 %)
+Writing at 0x0006565e... (27 %)
+Writing at 0x0006a8e4... (30 %)
+Writing at 0x0006fb3e... (32 %)
+Writing at 0x00074d34... (34 %)
+Writing at 0x0007a005... (37 %)
+Writing at 0x0007f55c... (39 %)
+Writing at 0x0008544f... (41 %)
+Writing at 0x0008ab9e... (44 %)
+Writing at 0x0008ff42... (46 %)
+Writing at 0x00095584... (48 %)
+Writing at 0x0009a715... (51 %)
+Writing at 0x0009f656... (53 %)
+Writing at 0x000a4f70... (55 %)
+Writing at 0x000aa6ff... (58 %)
+Writing at 0x000afcc5... (60 %)
+Writing at 0x000b51cd... (62 %)
+Writing at 0x000bace2... (65 %)
+Writing at 0x000c0b97... (67 %)
+Writing at 0x000c5c4f... (69 %)
+Writing at 0x000caca9... (72 %)
+Writing at 0x000d05a0... (74 %)
+Writing at 0x000d58f6... (76 %)
+Writing at 0x000daaa0... (79 %)
+Writing at 0x000e0201... (81 %)
+Writing at 0x000e59cd... (83 %)
+Writing at 0x000ee2b3... (86 %)
+Writing at 0x000f3cb5... (88 %)
+Writing at 0x000f9a1d... (90 %)
+Writing at 0x000ff340... (93 %)
+Writing at 0x00104f0a... (95 %)
+Writing at 0x0010ae2f... (97 %)
+Writing at 0x0010fe88... (100 %)
+Wrote 1056288 bytes (692525 compressed) at 0x00010000 in 15.7 seconds (effective 536.9 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 105...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (105 compressed) at 0x00008000 in 0.1 seconds (effective 356.1 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

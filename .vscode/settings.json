@@ -1,0 +1,9 @@
+{
+    "idf.currentSetup": "/home/zander/.espressif/release-v5.5/esp-idf",
+    "idf.port": "/dev/ttyUSB0",
+    "idf.flashType": "UART",
+    "idf.customExtraVars": {
+        "ADF_PATH": "/home/zander/.espressif/tools",
+        "IDF_TARGET": "esp32"
+    }
+}

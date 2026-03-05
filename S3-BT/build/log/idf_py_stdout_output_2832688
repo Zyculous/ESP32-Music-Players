@@ -1,0 +1,67 @@
+Command: /home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/bluetooth_music_player_es3c28p.elf /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/bootloader/bootloader.elf -m '/home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python' '/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/tools/idf.py' '-C' 'S3-BT' '-p' '/dev/ttyUSB0'
+[0;32mI (5243) wifi:connected with The Force, aid = 28, channel 8, BW20, bssid = c2:cf:84:3e:bf:c1[0m
+[0;32mI (5244) wifi:security: WPA3-SAE-EXT, phy: bgn, rssi: -49[0m
+[0;32mI (5248) wifi:pm start, type: 1[0m
+
+[0;32mI (5249) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (5257) wifi:set rx beacon pti, rx_bcn_pti: 14, bcn_timeout: 25000, mt_pti: 14, mt_time: 10000[0m
+[0;32mI (5315) wifi:<ba-add>idx:0 (ifx:0, c2:cf:84:3e:bf:c1), tid:7, ssn:4, winSize:64[0m
+[0;32mI (5579) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (10639) wifi:<ba-add>idx:1 (ifx:0, c2:cf:84:3e:bf:c1), tid:0, ssn:1, winSize:64[0m
+[0;32mI (22257) esp_netif_handlers: sta ip: 192.168.50.14, mask: 255.255.255.0, gw: 192.168.50.1[0m
+[0;32mI (22257) WIFI: Got IP: 192.168.50.14[0m
+[0;32mI (22258) WIFI: Connected to AP: The Force[0m
+[0;32mI (22329) MAIN: Starting SlimProto player...[0m
+[0;32mI (22330) SLIMPROTO: SlimProto player task started[0m
+[0;32mI (22330) SLIMPROTO: Connecting to SlimProto server 192.168.50.146:3483[0m
+[0;32mI (22352) SLIMPROTO: HELO sent[0m
+[0;32mI (22414) MAIN: Wi-Fi Music Player initialized successfully[0m
+[0;32mI (22414) MAIN: Heap internal free=123803, largest=49152[0m
+[0;32mI (22414) MAIN: Heap PSRAM free=8333656, largest=8257536[0m
+[0;32mI (22418) MAIN: SlimProto mode active[0m
+[0;32mI (22453) SLIMPROTO: Server version: 7.9[0m
+[0;32mI (22467) SLIMPROTO: strm cmd q[0m
+[0;32mI (22486) UI: Track metadata changed[0m
+[0;32mI (22587) SLIMPROTO: audg volume update -> 121/127 (len=18)[0m
+[0;32mI (27537) MAIN: Wi-Fi stream active - Playing: No[0m
+[0;32mI (28216) SLIMPROTO: strm cmd f[0m
+[0;32mI (28218) SLIMPROTO: strm cmd q[0m
+[0;32mI (28220) SLIMPROTO: Starting PCM stream http://192.168.50.146:8097/single/vfYnTb9r/3c:0f:02:dd:b5:30/2c87a59f38cf49a2a98c93f6354457c0.flac (44100 Hz, stereo)[0m
+[0;32mI (28226) MA_STREAM: Music Assistant stream started (http://192.168.50.146:8097/single/vfYnTb9r/3c:0f:02:dd:b5:30/2c87a59f38cf49a2a98c93f6354457c0.flac, 44100 Hz, stereo)[0m
+[0;32mI (28287) UI: Track metadata changed[0m
+[0;32mI (28422) MA_STREAM: Connected to stream: http://192.168.50.146:8097/single/vfYnTb9r/3c:0f:02:dd:b5:30/2c87a59f38cf49a2a98c93f6354457c0.flac[0m
+[0;32mI (28424) MA_STREAM: HTTP stream status=200 content_length=-1[0m
+[0;32mI (28429) ESP_ES_PARSER: The verion of es_parser is v1.0.0[0m
+[0;32mI (28435) FLAC_DEC: FLAC decoder stream started[0m
+[0;32mI (28509) UI: Play state changed: Playing[0m
+[0;32mI (29763) AUD_Dec_Parse: FLAC sample_rate 48000 duration:0 max_frame:4794[0m
+[1;31mE (29852) i2s_common: i2s_channel_disable(1262): the channel has not been enabled yet[0m
+[0;32mI (29853) I2S_IF: channel mode 0 bits:16/16 channel:2 mask:3[0m
+[0;32mI (29855) I2S_IF: STD Mode 1 bits:16/16 channel:2 sample_rate:48000 mask:3[0m
+[0;32mI (29878) Adev_Codec: Open codec device OK[0m
+[0;32mI (29880) AUDIO: audio clk: 48000 Hz, stereo[0m
+[0;32mI (29880) FLAC_DEC: FLAC output configured: 48000 Hz, 2 ch, 16 bits[0m
+[0;32mI (29881) AUDIO: audio packet out len=1024 packets=1[0m
+[0;32mI (29886) AUDIO: audio packet out len=1024 packets=2[0m
+[0;32mI (29890) AUDIO: audio packet out len=1024 packets=3[0m
+[0;32mI (29895) AUDIO: audio packet out len=1024 packets=4[0m
+[0;32mI (29900) AUDIO: audio packet out len=512 packets=5[0m
+[0;32mI (32802) MAIN: Wi-Fi stream active - Playing: Yes[0m
+[0;32mI (33088) AUDIO: audio packet out len=512 packets=500[0m
+[0;32mI (37233) SLIMPROTO: strm cmd p (pause)[0m
+[0;32mI (37254) AUDIO: audio packet out len=1024 packets=1[0m
+[0;32mI (37254) AUDIO: audio packet out len=1024 packets=2[0m
+[0;32mI (37254) AUDIO: audio packet out len=1024 packets=3[0m
+[0;32mI (37257) AUDIO: audio packet out len=1024 packets=4[0m
+[0;32mI (37262) AUDIO: audio packet out len=512 packets=5[0m
+[0;32mI (37302) UI: Play state changed: Paused[0m
+[0;32mI (37843) MAIN: Wi-Fi stream active - Playing: No[0m
+[0;32mI (42843) MAIN: Wi-Fi stream active - Playing: No[0m
+[0;32mI (47843) MAIN: Wi-Fi stream active - Playing: No[0m
+[0;32mI (52843) MAIN: Wi-Fi stream active - Playing: No[0m
+[0;32mI (57843) MAIN: Wi-Fi stream active - Playing: No[0m
+[0;32mI (59531) TOUCH: touch x=151 y=164[0m
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x2 (DOWNLOAD(USB/UART0))
+waiting for download

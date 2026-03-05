@@ -1,0 +1,3 @@
+Command: /home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/bluetooth_music_player_es3c28p.elf /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/S3-BT/build/bootloader/bootloader.elf -m '/home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python' '/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/tools/idf.py' '-C' 'S3-BT' '-p' '/dev/ttyUSB0'
+[0;33m--- esp-idf-monitor 1.9.0 on /dev/ttyUSB0 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CYD / S3 Web Flasher</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module" src="https://unpkg.com/esp-web-tools@10.1.0/dist/web/install-button.js?module"></script>
+</head>
+<body>
+  <main class="container">
+    <h1>ESP-IDF Web Flasher</h1>
+    <p class="subtitle">Flash prebuilt firmware, or generate/custom-flash your own CYD/S3 build.</p>
+
+    <section class="card">
+      <h2>1) Select Firmware</h2>
+      <div class="row">
+        <label>
+          <input type="radio" name="variant" value="cyd" checked />
+          CYD (ESP32 A2DP)
+        </label>
+        <label>
+          <input type="radio" name="variant" value="s3" />
+          S3 (ESP32-S3 SlimProto)
+        </label>
+      </div>
+      <p id="variant-note" class="note"></p>
+    </section>
+
+    <section class="card">
+      <h2>2) Flash Prebuilt Firmware</h2>
+      <p class="note">This flashes the default prebuilt image for the selected target.</p>
+      <div id="cydPrebuiltOptions" class="cyd-only">
+        <p class="note">CYD prebuilt profile:</p>
+        <div class="row">
+          <label>
+            <input type="radio" name="cydPrebuilt" value="default" checked />
+            Default
+          </label>
+          <label>
+            <input type="radio" name="cydPrebuilt" value="touch-off" />
+            Touch Disabled
+          </label>
+          <label>
+            <input type="radio" name="cydPrebuilt" value="image-off" />
+            Image Loading Disabled
+          </label>
+          <label>
+            <input type="radio" name="cydPrebuilt" value="touch-image-off" />
+            Touch + Image Disabled
+          </label>
+        </div>
+      </div>
+      <p id="firmwareStatus" class="note"></p>
+      <esp-web-install-button id="installButton" manifest="manifest-cyd.json"></esp-web-install-button>
+    </section>
+
+    <section class="card">
+      <h2>3) Generate Custom Build Config</h2>
+      <p class="note">Use this to change values (like device name) before building your own image.</p>
+
+      <div class="grid">
+        <label>
+          Device Name
+          <input id="deviceName" type="text" maxlength="31" placeholder="CYD Music Player" />
+        </label>
+
+        <label class="cyd-only">
+          <span>CYD: Disable Touch Module</span>
+          <input id="disableTouch" type="checkbox" />
+        </label>
+
+        <label class="cyd-only">
+          <span>CYD: Disable Image Loading (Cover Art Decode)</span>
+          <input id="disableImageLoading" type="checkbox" />
+        </label>
+
+        <label class="s3-only">
+          Wi-Fi SSID (S3)
+          <input id="wifiSsid" type="text" placeholder="MyWiFi" />
+        </label>
+
+        <label class="s3-only">
+          Wi-Fi Password (S3)
+          <input id="wifiPassword" type="text" placeholder="Secret123" />
+        </label>
+
+        <label class="s3-only">
+          SlimProto Host (S3)
+          <input id="slimHost" type="text" placeholder="192.168.1.20" />
+        </label>
+
+        <label class="s3-only">
+          SlimProto Port (S3)
+          <input id="slimPort" type="number" min="1" max="65535" value="3483" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="generateBtn" type="button">Generate Build Script</button>
+        <button id="downloadBtn" type="button">Download Script</button>
+      </div>
+
+      <textarea id="output" rows="14" readonly></textarea>
+    </section>
+
+    <section class="card">
+      <h2>4) Flash With Custom Script</h2>
+      <p class="note">Set each binary source with either a URL or a local file upload. Chip family is taken from section 1.</p>
+
+      <div class="grid">
+        <label>
+          Bootloader URL (0x1000)
+          <input id="bootloaderUrl" type="text" placeholder="firmware/cyd/bootloader.bin" />
+        </label>
+        <label>
+          Bootloader File (optional)
+          <input id="bootloaderFile" type="file" accept=".bin,application/octet-stream" />
+        </label>
+
+        <label>
+          Partition Table URL (0x8000)
+          <input id="partitionUrl" type="text" placeholder="firmware/cyd/partition-table.bin" />
+        </label>
+        <label>
+          Partition Table File (optional)
+          <input id="partitionFile" type="file" accept=".bin,application/octet-stream" />
+        </label>
+
+        <label>
+          Application URL (0x10000)
+          <input id="appUrl" type="text" placeholder="firmware/cyd/bluetooth_music_player_cyd.bin" />
+        </label>
+        <label>
+          Application File (optional)
+          <input id="appFile" type="file" accept=".bin,application/octet-stream" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="applyCustomScriptBtn" type="button">Apply Custom Sources</button>
+        <button id="downloadManifestBtn" type="button">Download Custom Manifest</button>
+      </div>
+
+      <p id="customScriptStatus" class="note"></p>
+      <esp-web-install-button id="customInstallButton" manifest="manifest-cyd.json"></esp-web-install-button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

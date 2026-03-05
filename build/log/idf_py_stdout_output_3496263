@@ -1,0 +1,672 @@
+Command: /home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/build/bluetooth_music_player_cyd.elf /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/build/bootloader/bootloader.elf -m '/home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python' '/home/zander/Code Repos/musicPlayer-CYD/cyd-espidf/esp-idf-v5.5.3/tools/idf.py' '-p' '/dev/ttyUSB0'
+x�xx������ sets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6280
+load:0x40078000,len:15864
+load:0x40080400,len:3920
+entry 0x40080644
+[0;32mI (27) boot: ESP-IDF v5.5.3-dirty 2nd stage bootloader[0m
+[0;32mI (27) boot: compile time Mar  5 2026 16:14:19[0m
+[0;32mI (28) boot: Multicore bootloader[0m
+[0;32mI (29) boot: chip revision: v3.1[0m
+[0;32mI (32) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (36) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32: SPI Flash Size : 2MB[0m
+[0;32mI (43) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (50) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (63) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00177000[0m
+[0;32mI (76) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=328f0h (207088) map[0m
+[0;32mI (157) esp_image: segment 1: paddr=00042918 vaddr=3ffbdb60 size=050e8h ( 20712) load[0m
+[0;32mI (165) esp_image: segment 2: paddr=00047a08 vaddr=40080000 size=08610h ( 34320) load[0m
+[0;32mI (179) esp_image: segment 3: paddr=00050020 vaddr=400d0020 size=b96dch (759516) map[0m
+[0;32mI (439) esp_image: segment 4: paddr=00109704 vaddr=40088610 size=15170h ( 86384) load[0m
+[0;32mI (473) esp_image: segment 5: paddr=0011e87c vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (487) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (487) boot: Disabling RNG early entropy source...[0m
+[0;32mI (498) quad_psram: This chip is ESP32-D0WD[0m
+[0;32mI (498) esp_psram: Found 8MB PSRAM device[0m
+[0;32mI (498) esp_psram: Speed: 40MHz[0m
+[0;32mI (498) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.[0m
+[0;33mW (505) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped[0m
+[0;32mI (513) cpu_start: Multicore app[0m
+[0;32mI (1374) esp_psram: SPI SRAM memory test OK[0m
+[0;32mI (1382) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (1382) cpu_start: Pro cpu start user code[0m
+[0;32mI (1382) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (1384) app_init: Application information:[0m
+[0;32mI (1388) app_init: Project name:     bluetooth_music_player_cyd[0m
+[0;32mI (1394) app_init: App version:      a4c2a76-dirty[0m
+[0;32mI (1398) app_init: Compile time:     Mar  5 2026 16:14:08[0m
+[0;32mI (1403) app_init: ELF file SHA256:  432c6804a...[0m
+[0;32mI (1408) app_init: ESP-IDF:          v5.5.3-dirty[0m
+[0;32mI (1412) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (1416) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (1420) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (1424) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (1430) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM[0m
+[0;32mI (1436) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM[0m
+[0;32mI (1441) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM[0m
+[0;32mI (1446) heap_init: At 3FFCEE00 len 00011200 (68 KiB): DRAM[0m
+[0;32mI (1451) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (1457) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (1462) heap_init: At 4009D780 len 00002880 (10 KiB): IRAM[0m
+[0;32mI (1468) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator[0m
+[0;32mI (1476) spi_flash: detected chip: generic[0m
+[0;32mI (1478) spi_flash: flash io: dio[0m
+[0;33mW (1481) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;33mW (1493) ADC: legacy driver is deprecated, please migrate to `esp_adc/adc_oneshot.h`[0m
+[0;33mW (1501) i2s(legacy): legacy i2s driver is deprecated, please migrate to use driver/i2s_std.h, driver/i2s_pdm.h or driver/i2s_tdm.h[0m
+[0;32mI (1524) coexist: coex firmware version: 093e3d2[0m
+[0;32mI (1525) main_task: Started on CPU0[0m
+[0;32mI (1525) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations[0m
+[0;32mI (1530) main_task: Calling app_main()[0m
+[0;32mI (1533) MAIN: Starting Bluetooth Music Player for CYD[0m
+[0;32mI (1570) MAIN: Initializing display...[0m
+[0;32mI (1570) DISPLAY: Initializing LCD display[0m
+D (1572) lcd_panel.io.spi: new spi lcd panel io @0x3ffbd4a4, max_trans_bytes: 53196
+D (1574) lcd_panel.st7789: new st7789 panel @0x3ffbd784
+[0;32mI (1699) DISPLAY: LCD display initialized[0m
+[0;32mI (1699) MAIN: Initializing audio...[0m
+[0;32mI (1702) AUDIO: audio init ok: 44100 Hz stereo (internal DAC)[0m
+[0;32mI (1703) MAIN: Initializing bluetooth...[0m
+[0;32mI (1707) BTDM_INIT: BT controller compile version [045a658][0m
+[0;32mI (1710) BTDM_INIT: Using main XTAL as clock source[0m
+[0;32mI (1715) BTDM_INIT: Bluetooth MAC: 78:1c:3c:2b:a3:fa[0m
+[0;32mI (1721) phy_init: phy_version 4863,a3a4459,Oct 28 2025,14:30:06[0m
+[0;33mW (2434) BLUETOOTH: Unhandled AVRC event: 10[0m
+[0;33mW (2442) BT_BTC: A2DP Enable with AVRC[0m
+[0;33mW (2455) BLUETOOTH: Unhandled A2DP event: 4[0m
+[0;32mI (2460) BLUETOOTH: [DIAG] AVRCP command task started[0m
+[0;32mI (2463) BLUETOOTH: [DIAG] AVRCP task waiting for command...[0m
+[0;32mI (2464) BLUETOOTH: Bluetooth initialized successfully[0m
+[0;32mI (2469) MAIN: Initializing touch...[0m
+[0;32mI (2473) TOUCH: FT6336 touch initialized[0m
+[0;32mI (2585) DISPLAY: Drawing initial UI[0m
+[0;32mI (3121) MAIN: Bluetooth Music Player initialized successfully[0m
+[0;32mI (3122) MAIN: Device name: CYD Music Player[0m
+[0;32mI (3122) MAIN: Heap internal free=127559, largest=110592[0m
+[0;32mI (3125) MAIN: Heap PSRAM free=4068552, largest=4063232[0m
+[0;32mI (3130) MAIN: Waiting for Bluetooth connection...[0m
+[0;32mI (3134) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (3408) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (3658) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (3908) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (4158) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (4408) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (4658) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (4908) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (5163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (5413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (5663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (5913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (6163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (6413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (6663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (6913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (7163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (7413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (7663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (7913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (7913) MAIN: Waiting for Bluetooth connection...[0m
+[0;32mI (8163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (8413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (8663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (8913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (9163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (9413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (9663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (9913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (10163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (10413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (10663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (10913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (11163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (11413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (11663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (11913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (12163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (12413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (12663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (12913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (12913) MAIN: Waiting for Bluetooth connection...[0m
+[0;32mI (13163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (13413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (13663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (13913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (14163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (14413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (14663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (14913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (15163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (15413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (15663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (15913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (16163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (16413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (16663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (16913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (17163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (17413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (17663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (17913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (17913) MAIN: Waiting for Bluetooth connection...[0m
+[0;32mI (18163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (18413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (18663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (18913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (19163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (19413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (19663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (19913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (20163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (20413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (20663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (20913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (21163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (21413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (21663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (21913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (22163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (22413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;33mW (22546) BT_HCI: hcif conn complete: hdl 0x80, st 0x0[0m
+[0;33mW (22551) BLUETOOTH: Unhandled GAP event: 16[0m
+[0;33mW (22568) BT_HCI: hcif link supv_to changed: hdl 0x80, supv_to 8000[0m
+[0;33mW (22657) BLUETOOTH: Unhandled GAP event: 21[0m
+[0;32mI (22670) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (22705) BLUETOOTH: A2DP connection state: 1[0m
+[0;32mI (22763) BLUETOOTH: A2DP audio config received[0m
+[0;32mI (22763) BLUETOOTH: A2DP detected format: 44100 Hz, 2 channels[0m
+[0;32mI (22764) BLUETOOTH: Applying detected audio format to output[0m
+[0;32mI (22773) AUDIO: audio clk: 44100 Hz, stereo[0m
+[0;33mW (22774) BLUETOOTH: Unhandled A2DP event: 6[0m
+[0;33mW (22806) BT_APPL: new conn_srvc id:19, app_id:0[0m
+[0;32mI (22807) BLUETOOTH: A2DP connection state: 2[0m
+[0;32mI (22808) BLUETOOTH: A2DP connected[0m
+[0;32mI (22921) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (22931) BLUETOOTH: AVRC connection state: 1[0m
+[0;32mI (22931) BLUETOOTH: AVRC connected[0m
+[0;32mI (22932) BLUETOOTH: Requested metadata[0m
+[0;32mI (22932) BLUETOOTH: AVRC TG connection state: 1[0m
+[0;33mW (22935) BLUETOOTH: Unhandled AVRC event: 5[0m
+[0;32mI (22955) MAIN: Connected - Playing: No[0m
+[0;32mI (22990) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (22991) BLUETOOTH: Title: Better Than You[0m
+[0;32mI (22991) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (22993) BLUETOOTH: Artist: Phoneboy[0m
+[0;32mI (22996) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (23008) BLUETOOTH: Album: Better Than You[0m
+[0;32mI (23009) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (23010) BLUETOOTH: Track number: 1[0m
+[0;32mI (23013) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (23018) BLUETOOTH: Duration: 150000 ms[0m
+[0;32mI (23023) BLUETOOTH: Cover art state: 1, reason: 0[0m
+[0;32mI (23047) BLUETOOTH: Volume updated: 47%[0m
+[0;32mI (23205) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (23231) UI: Track metadata changed[0m
+[0;32mI (23663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (23913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (24163) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (24413) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (24663) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (24690) BLUETOOTH: AVRC notify event: 1[0m
+[0;32mI (24691) BLUETOOTH: Requested metadata[0m
+[0;32mI (24753) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (24754) BLUETOOTH: Title: Better Than You[0m
+[0;32mI (24754) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (24756) BLUETOOTH: Artist: Phoneboy[0m
+[0;32mI (24760) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (24764) BLUETOOTH: Album: Better Than You[0m
+[0;32mI (24768) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (24773) BLUETOOTH: Track number: 1[0m
+[0;32mI (24776) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (24781) BLUETOOTH: Duration: 150000 ms[0m
+[0;32mI (24785) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;32mI (24841) BT_LOG: bta_av_link_role_ok hndl:x41 role:1 conn_audio:x1 bits:1 features:x864b[0m
+
+[0;33mW (24843) BT_APPL: new conn_srvc id:19, app_id:1[0m
+[0;32mI (24880) BLUETOOTH: Cover art handle updated[0m
+[0;32mI (24881) BLUETOOTH: Requesting cover art image...[0m
+[0;32mI (24882) BLUETOOTH: Cover art JPEG request sent (profile=0)[0m
+[0;32mI (24884) BLUETOOTH: A2DP audio state: 1[0m
+[0;32mI (24887) BLUETOOTH: Requested metadata[0m
+[0;32mI (24891) BLUETOOTH: Cover art request already in progress, skipping[0m
+[0;32mI (24913) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (24913) UI: Play state changed: Playing[0m
+[0;32mI (24936) BLUETOOTH: Cover art data: status=0, len=1011, final=false[0m
+[0;32mI (24954) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (24975) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (24996) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (24997) BLUETOOTH: Title: Better Than You[0m
+[0;32mI (24997) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (24999) BLUETOOTH: Artist: Phoneboy[0m
+[0;32mI (25008) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (25013) BLUETOOTH: Album: Better Than You[0m
+[0;32mI (25013) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (25016) BLUETOOTH: Track number: 1[0m
+[0;32mI (25019) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (25025) BLUETOOTH: Duration: 150000 ms[0m
+[0;32mI (25028) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;32mI (25035) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25043) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25047) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25051) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25094) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25098) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25125) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25126) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25147) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25167) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25181) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25197) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25213) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25235) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25256) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25272) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25292) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25310) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25326) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25346) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (25352) BLUETOOTH: Cover art data: status=0, len=733, final=true[0m
+[0;32mI (25601) BLUETOOTH: Cover art assembled: 24030 bytes[0m
+[0;32mI (25947) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (26210) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (26460) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (26710) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (26960) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (27211) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (27461) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (27581) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (27582) BLUETOOTH: Requested metadata[0m
+[0;32mI (27653) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (27654) BLUETOOTH: Title: Wristwatch[0m
+[0;32mI (27654) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (27656) BLUETOOTH: Artist: Thesaurus Rex[0m
+[0;32mI (27659) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (27664) BLUETOOTH: Album: Wristwatch[0m
+[0;32mI (27668) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (27672) BLUETOOTH: Track number: 1[0m
+[0;32mI (27676) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (27681) BLUETOOTH: Duration: 184000 ms[0m
+[0;32mI (27713) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (27714) UI: Track metadata changed[0m
+[0;32mI (27740) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (27740) BLUETOOTH: Requested metadata[0m
+[0;32mI (27825) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (27825) BLUETOOTH: Title: Wristwatch[0m
+[0;32mI (27826) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (27827) BLUETOOTH: Artist: Thesaurus Rex[0m
+[0;32mI (27831) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (27836) BLUETOOTH: Album: Wristwatch[0m
+[0;32mI (27840) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (27844) BLUETOOTH: Track number: 1[0m
+[0;32mI (27847) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (27852) BLUETOOTH: Duration: 184000 ms[0m
+[0;32mI (27857) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;32mI (27952) BLUETOOTH: Cover art handle updated[0m
+[0;32mI (27954) BLUETOOTH: Requesting cover art image...[0m
+[0;32mI (27955) BLUETOOTH: Cover art JPEG request sent (profile=0)[0m
+[0;32mI (28001) BLUETOOTH: Cover art data: status=0, len=1011, final=false[0m
+[0;32mI (28037) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28038) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28067) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28071) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28093) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28114) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28144) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28146) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28161) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28184) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28200) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28215) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28239) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28255) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28275) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28291) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28309) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28334) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28379) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28437) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28458) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28475) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28495) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28511) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28527) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28553) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28567) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28586) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28604) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28627) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (28628) BLUETOOTH: Cover art data: status=0, len=304, final=true[0m
+[0;32mI (28888) BLUETOOTH: Cover art assembled: 31705 bytes[0m
+[0;32mI (29246) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (29426) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (29427) BLUETOOTH: Requested metadata[0m
+[0;32mI (29498) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (29512) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (29513) BLUETOOTH: Requested metadata[0m
+[0;32mI (29524) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (29525) BLUETOOTH: Title: It's Okay (To Punch Nazis)[0m
+[0;32mI (29525) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (29528) BLUETOOTH: Artist: Cheap Perfume[0m
+[0;32mI (29532) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (29539) BLUETOOTH: Album: It's Okay (To Punch Nazis)[0m
+[0;32mI (29542) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (29547) BLUETOOTH: Track number: 1[0m
+[0;32mI (29550) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (29555) BLUETOOTH: Duration: 145000 ms[0m
+[0;32mI (29559) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;32mI (29652) BLUETOOTH: Cover art handle updated[0m
+[0;32mI (29653) BLUETOOTH: Requesting cover art image...[0m
+[0;32mI (29654) BLUETOOTH: Cover art JPEG request sent (profile=0)[0m
+[0;32mI (29656) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (29660) BLUETOOTH: Title: It's Okay (To Punch Nazis)[0m
+[0;32mI (29665) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (29670) BLUETOOTH: Artist: Cheap Perfume[0m
+[0;32mI (29674) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (29679) BLUETOOTH: Album: It's Okay (To Punch Nazis)[0m
+[0;32mI (29683) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (29689) BLUETOOTH: Track number: 1[0m
+[0;32mI (29692) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (29697) BLUETOOTH: Duration: 145000 ms[0m
+[0;32mI (29700) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;32mI (29711) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (29712) BLUETOOTH: Requested metadata[0m
+[0;32mI (29749) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (29749) UI: Track metadata changed[0m
+[0;32mI (29794) BLUETOOTH: Cover art data: status=0, len=1011, final=false[0m
+[0;32mI (29795) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (29858) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (29862) BLUETOOTH: Requested metadata[0m
+[0;32mI (29864) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (29864) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (29869) BLUETOOTH: Title: Ain't No Rest for the Wicked[0m
+[0;32mI (29874) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (29881) BLUETOOTH: Artist: Cage The Elephant[0m
+[0;32mI (29887) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (29888) BLUETOOTH: Album: Cage The Elephant (Expanded Edition)[0m
+[0;32mI (29895) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (29899) BLUETOOTH: Track number: 1[0m
+[0;32mI (29902) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (29907) BLUETOOTH: Duration: 175000 ms[0m
+[0;32mI (29912) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;32mI (30041) BLUETOOTH: Cover art handle updated[0m
+[0;32mI (30043) BLUETOOTH: Requesting cover art image...[0m
+[0;32mI (30044) BLUETOOTH: Cover art JPEG request sent (profile=0)[0m
+[0;32mI (30045) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30053) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30061) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30063) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30069) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30078) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30082) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30088) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30095) BLUETOOTH: Cover art data: status=0, len=261, final=true[0m
+[0;33mW (30099) BLUETOOTH: Cover art payload is not JPEG-like, retrying with smaller JPEG profile=0[0m
+[0;32mI (30108) BLUETOOTH: Requesting cover art image...[0m
+[0;32mI (30112) BLUETOOTH: Cover art JPEG request sent (profile=1)[0m
+[0;32mI (30121) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (30122) BLUETOOTH: Title: 1923[0m
+[0;32mI (30125) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (30130) BLUETOOTH: Artist: My Buddy Eric[0m
+[0;32mI (30133) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (30138) BLUETOOTH: Album: 1923[0m
+[0;32mI (30141) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (30146) BLUETOOTH: Track number: 1[0m
+[0;32mI (30149) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (30154) BLUETOOTH: Duration: 229000 ms[0m
+[0;32mI (30364) BLUETOOTH: Cover art data: status=0, len=1011, final=false[0m
+[0;32mI (30366) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30368) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30375) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30381) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (30382) BLUETOOTH: Requested metadata[0m
+[0;32mI (30389) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30393) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30398) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30406) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30412) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30419) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30426) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30430) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30444) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30452) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30453) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30466) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30472) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30657) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (30658) BLUETOOTH: Title: Dirty Devil Town[0m
+[0;32mI (30658) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (30663) BLUETOOTH: Artist: Mother Mother, Cavetown[0m
+[0;32mI (30665) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (30672) BLUETOOTH: Album: Dirty Devil Town[0m
+[0;32mI (30676) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (30682) BLUETOOTH: Track number: 1[0m
+[0;32mI (30682) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (30687) BLUETOOTH: Duration: 139000 ms[0m
+[0;32mI (30691) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30698) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30705) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30716) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30717) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30725) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (30728) BLUETOOTH: Requested metadata[0m
+[0;32mI (30730) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30738) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30746) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30750) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30755) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30770) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30771) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30782) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30784) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30785) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (30791) BLUETOOTH: Cover art data: status=0, len=127, final=true[0m
+[0;33mW (30854) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30865) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30880) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30894) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30909) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30922) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30939) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30951) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30970) BT_APPL: Pkt dropped[0m
+
+[0;33mW (30992) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31007) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31011) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31024) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31040) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31053) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31064) BLUETOOTH: Cover art assembled: 32541 bytes[0m
+[0;32mI (31064) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (31065) BLUETOOTH: Title: ICE BREAKER[0m
+[0;32mI (31066) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;33mW (31070) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31074) BLUETOOTH: Artist: Naethan Apollo[0m
+[0;32mI (31078) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (31082) BLUETOOTH: Album: ICE BREAKER[0m
+[0;33mW (31085) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31089) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (31094) BLUETOOTH: Track number: 1[0m
+[0;33mW (31097) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31100) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (31105) BLUETOOTH: Duration: 111000 ms[0m
+[0;32mI (31109) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;33mW (31110) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31117) DISPLAY: Failed to acquire SPI mutex (self=main)[0m
+[0;33mW (31126) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31139) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31154) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31169) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31183) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31204) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31209) BLUETOOTH: Cover art handle updated[0m
+[0;33mW (31212) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31213) BLUETOOTH: Requesting cover art image...[0m
+[0;32mI (31214) BLUETOOTH: Cover art JPEG request sent (profile=0)[0m
+[0;32mI (31218) BLUETOOTH: AVRC notify event: 2[0m
+[0;32mI (31220) BLUETOOTH: Requested metadata[0m
+[0;33mW (31229) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31438) BLUETOOTH: Cover art data: status=0, len=1011, final=false[0m
+[0;32mI (31439) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31442) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31454) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (31454) BLUETOOTH: Title: First Generation Degenerate[0m
+[0;32mI (31460) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (31463) BLUETOOTH: Artist: Earth to Eve[0m
+[0;32mI (31466) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (31472) BLUETOOTH: Album: First Generation Degenerate[0m
+[0;32mI (31476) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (31482) BLUETOOTH: Track number: 1[0m
+[0;32mI (31484) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (31491) BLUETOOTH: Duration: 217000 ms[0m
+[0;32mI (31493) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;33mW (31609) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31627) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31640) BLUETOOTH: Cover art handle updated[0m
+[0;32mI (31641) BLUETOOTH: Requesting cover art image...[0m
+[0;32mI (31642) BLUETOOTH: Cover art JPEG request sent (profile=0)[0m
+[0;33mW (31645) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31646) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;33mW (31653) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31655) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31661) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31667) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;33mW (31671) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31676) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31682) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;33mW (31686) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31691) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31697) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;33mW (31701) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31706) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31712) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;33mW (31716) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31721) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31727) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;33mW (31731) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31736) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31742) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;33mW (31746) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31751) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31757) BLUETOOTH: Cover art data: status=0, len=993, final=true[0m
+[0;33mW (31761) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31766) BLUETOOTH: Cover art payload is not JPEG-like, retrying with smaller JPEG profile=0[0m
+[0;33mW (31776) BT_APPL: Pkt dropped[0m
+
+[0;32mI (31778) BLUETOOTH: Requesting cover art image...[0m
+[0;32mI (31781) BLUETOOTH: Cover art JPEG request sent (profile=1)[0m
+[0;33mW (31792) BT_APPL: Pkt dropped[0m
+
+[0;33mW (31794) BT_APPL: Sequence numbers error, recv:0x1b4, expect:0x199, recount:0x0[0m
+[0;32mI (31985) BLUETOOTH: Cover art data: status=0, len=1011, final=false[0m
+[0;32mI (31991) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31992) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (31993) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32000) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32007) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32011) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32021) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32028) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32029) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32036) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32046) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;33mW (32048) BT_APPL: Sequence numbers error, recv:0x1da, expect:0x1cd, recount:0x0[0m
+[0;32mI (32210) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32211) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32212) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32220) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32224) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32233) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32241) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32244) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32248) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32255) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32334) BLUETOOTH: Cover art data: status=0, len=1013, final=false[0m
+[0;32mI (32335) BLUETOOTH: Cover art data: status=0, len=946, final=true[0m
+[0;32mI (32569) BLUETOOTH: Cover art assembled: 24243 bytes[0m
+[0;33mW (32657) AUDIO: audio queue drops: 100[0m
+[0;32mI (33137) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (33137) UI: Track metadata changed[0m
+[0;32mI (33743) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (33743) MAIN: Connected - Playing: Yes[0m
+[0;32mI (33994) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (34244) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (34499) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (34749) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (34999) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (35250) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (35500) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (35750) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (36000) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (36255) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (36505) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (36647) BLUETOOTH: AVRC notify event: 1[0m
+[0;32mI (36648) BLUETOOTH: Requested metadata[0m
+[0;32mI (36695) BLUETOOTH: AVRC metadata response: attr_id=1[0m
+[0;32mI (36695) BLUETOOTH: Title: First Generation Degenerate[0m
+[0;32mI (36696) BLUETOOTH: AVRC metadata response: attr_id=2[0m
+[0;32mI (36699) BLUETOOTH: Artist: Earth to Eve[0m
+[0;32mI (36703) BLUETOOTH: AVRC metadata response: attr_id=4[0m
+[0;32mI (36707) BLUETOOTH: Album: First Generation Degenerate[0m
+[0;32mI (36713) BLUETOOTH: AVRC metadata response: attr_id=8[0m
+[0;32mI (36717) BLUETOOTH: Track number: 1[0m
+[0;32mI (36720) BLUETOOTH: AVRC metadata response: attr_id=64[0m
+[0;32mI (36727) BLUETOOTH: Duration: 217000 ms[0m
+[0;32mI (36729) BLUETOOTH: AVRC metadata response: attr_id=128[0m
+[0;32mI (36755) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (37011) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (37261) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (37511) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (37761) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (38012) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (38262) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (38512) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (38767) MAIN: [HEARTBEAT] Main loop tick[0m
+[0;32mI (38768) MAIN: Connected - Playing: Yes[0m
+[0;32mI (39018) MA

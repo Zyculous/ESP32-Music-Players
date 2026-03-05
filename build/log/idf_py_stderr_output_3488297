@@ -1,0 +1,12 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/home/zander/.espressif/python_env/idf5.5_py3.13_env/bin/python -DESP_PLATFORM=1 -DCCACHE_ENABLE=0 /home/zander/Code Repos/musicPlayer-CYD/cyd-espidf
+CMake Warning at esp-idf-v5.5.3/tools/cmake/git_submodules.cmake:52 (message):
+  Git submodule components/bt/host/nimble/nimble is out of date.  Run the
+  following command to fix: git submodule update --init --recursive
+Call Stack (most recent call first):
+  esp-idf-v5.5.3/tools/cmake/build.cmake:109 (git_submodule_check)
+  esp-idf-v5.5.3/tools/cmake/build.cmake:284 (__build_get_idf_git_revision)
+  esp-idf-v5.5.3/tools/cmake/idf.cmake:55 (__build_init)
+  esp-idf-v5.5.3/tools/cmake/project.cmake:29 (include)
+  CMakeLists.txt:10 (include)
+
+
