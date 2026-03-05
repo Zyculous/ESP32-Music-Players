@@ -1,0 +1,13 @@
+idf_component_register(SRCS "main.c"
+                      "bluetooth_ble.c"
+                      "esp_hid_gap.c"
+                      "wifi_handler.c"
+                      "slimproto_handler.c"
+                      "ma_stream_handler.c"
+                      "flac_decoder_handler.c"
+                      "display_handler.c"
+                      "audio_handler.c"
+                      "ui_handler.c"
+                      "touch_handler.c"
+                      INCLUDE_DIRS "."
+                      REQUIRES nvs_flash bt esp_hid esp_lcd esp_jpeg driver esp_driver_i2s esp_driver_spi esp_driver_gpio esp_driver_i2c esp_timer esp_wifi esp_event esp_netif esp_http_client lwip espressif__esp_audio_codec)
