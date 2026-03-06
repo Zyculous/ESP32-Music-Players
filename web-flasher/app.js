@@ -62,7 +62,7 @@ function getSeededBtName() {
   return value.slice(0, CYD_BT_SEED_LEN);
 }
 
-function patchCydAppBytesWithBtNameSeed(sourceBytes, btName) {
+async function patchCydAppBytesWithBtNameSeed(sourceBytes, btName) {
   const prefixBytes = new TextEncoder().encode(CYD_BT_SEED_PREFIX);
 
   let markerOffset = -1;
@@ -88,13 +88,13 @@ function patchCydAppBytesWithBtNameSeed(sourceBytes, btName) {
   const nameBytes = new TextEncoder().encode(paddedName);
   sourceBytes.set(nameBytes, markerOffset);
 
-  // The ESP image checksum byte must be recomputed after mutating segment data.
-  updateEspImageChecksum(sourceBytes);
+  // ESP images in this project use both checksum and appended hash validation.
+  await updateEspImageIntegrity(sourceBytes);
 
   return sourceBytes;
 }
 
-function updateEspImageChecksum(imageBytes) {
+function getEspImageLayout(imageBytes) {
   if (!(imageBytes instanceof Uint8Array) || imageBytes.length < 24) {
     throw new Error("Invalid ESP image: too small");
   }
@@ -109,6 +109,7 @@ function updateEspImageChecksum(imageBytes) {
   }
 
   const segmentCount = imageBytes[1];
+  const hashAppended = imageBytes[23] === 1;
   let offset = IMAGE_HEADER_SIZE;
   let checksum = CHECKSUM_INITIAL;
 
@@ -140,7 +141,39 @@ function updateEspImageChecksum(imageBytes) {
     throw new Error("Invalid ESP image: checksum byte out of range");
   }
 
-  imageBytes[checksumByteIndex] = checksum;
+  return {
+    checksum,
+    checksumByteIndex,
+    unpaddedLength,
+    checksumAreaLength,
+    hashAppended,
+    hashOffset: unpaddedLength + checksumAreaLength
+  };
+}
+
+async function updateEspImageIntegrity(imageBytes) {
+  const layout = getEspImageLayout(imageBytes);
+
+  imageBytes[layout.checksumByteIndex] = layout.checksum;
+
+  if (!layout.hashAppended) {
+    return;
+  }
+
+  const HASH_LEN = 32;
+  if (layout.hashOffset + HASH_LEN > imageBytes.length) {
+    throw new Error("Invalid ESP image: hash area out of range");
+  }
+
+  if (!globalThis.crypto || !globalThis.crypto.subtle) {
+    throw new Error("WebCrypto SHA-256 support is unavailable in this browser");
+  }
+
+  const digest = new Uint8Array(
+    await globalThis.crypto.subtle.digest("SHA-256", imageBytes.subarray(0, layout.hashOffset))
+  );
+
+  imageBytes.set(digest, layout.hashOffset);
 }
 
 async function checkFirmwareAvailability(manifestPath) {
@@ -244,7 +277,7 @@ async function createInstallManifest() {
   }
 
   const sourceBytes = new Uint8Array(await appResponse.arrayBuffer());
-  const patchedBytes = patchCydAppBytesWithBtNameSeed(sourceBytes, btName);
+  const patchedBytes = await patchCydAppBytesWithBtNameSeed(sourceBytes, btName);
   const patchedFile = new File([patchedBytes], "bluetooth_music_player_cyd_patched.bin", { type: "application/octet-stream" });
   const patchedBlobUrl = URL.createObjectURL(patchedFile);
 
