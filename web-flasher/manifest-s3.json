@@ -1,0 +1,15 @@
+{
+  "name": "S3 Music Player (ESP32-S3)",
+  "version": "1.0.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "firmware/s3/bootloader.bin", "offset": 0 },
+        { "path": "firmware/s3/partition-table.bin", "offset": 32768 },
+        { "path": "firmware/s3/bluetooth_music_player_s3.bin", "offset": 65536 }
+      ]
+    }
+  ]
+}

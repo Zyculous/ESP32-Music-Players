@@ -1,0 +1,15 @@
+{
+  "name": "CYD Music Player (ESP32)",
+  "version": "1.0.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "firmware/cyd/bootloader.bin", "offset": 4096 },
+        { "path": "firmware/cyd/partition-table.bin", "offset": 32768 },
+        { "path": "firmware/cyd/bluetooth_music_player_cyd.bin", "offset": 65536 }
+      ]
+    }
+  ]
+}

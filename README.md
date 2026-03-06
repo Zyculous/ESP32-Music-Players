@@ -5,56 +5,20 @@ This repository contains two separate firmware targets:
 - CYD build (ESP32 Classic Bluetooth A2DP sink) using [CYD-BT](CYD-BT)
 - S3 build (ESP32-S3 Wi-Fi SlimProto player) using [S3-BT](S3-BT)
 
-Both targets share the same repository, but they are intended for different hardware and playback modes.
-
-## Common Setup
-
-1. Install and export ESP-IDF (v5.5.x recommended).
-2. Open this repo root.
-3. Use the variant-specific build commands below.
-
-## Web Flasher (GitHub Pages)
-
-The repository includes a browser flasher app in [web-flasher](web-flasher).
-
-- UI supports both firmware options: CYD and S3.
-- One-click flashing uses `esp-web-tools` with these manifests:
-  - [web-flasher/manifest-cyd.json](web-flasher/manifest-cyd.json)
-  - [web-flasher/manifest-s3.json](web-flasher/manifest-s3.json)
-- CYD prebuilt install options include default, touch disabled, image loading disabled, and touch + image disabled.
-- Build config section generates a shell script for local custom builds.
-- Custom flash mode supports offset/path input and generated manifests.
-- CYD config includes build-size toggles:
-  - Disable touch module (`CYD_ENABLE_TOUCH=OFF`)
-  - Disable image loading / cover-art decode (`CYD_ENABLE_IMAGE_LOADING=OFF`)
-
-Hosted URL pattern after enabling GitHub Pages:
-
-- `https://<your-org-or-user>.github.io/<repo-name>/`
-
-Notes:
-
-- Browser flashing uses prebuilt binaries placed under `web-flasher/firmware/...`.
-- Custom values (device name / S3 network settings) are applied via the generated script, then firmware is built and flashed locally.
-- Workflow [deploy-web-flasher.yml](.github/workflows/deploy-web-flasher.yml) publishes Pages content from `web-flasher`.
-- Workflow [release-web-flasher.yml](.github/workflows/release-web-flasher.yml) can auto-build CYD/S3 binaries and publish a ready-to-flash Pages site.
-
----
-
 ## CYD Section (ESP32)
 
 ### What it is
 
-CYD is the Classic Bluetooth music player build for ESP32-based Cheap Yellow Display boards.
+CYD is the Classic Bluetooth music player build for ESP32 Cheap Yellow Display boards.
 
 - Target: `esp32`
-- Playback: Bluetooth A2DP sink from phones/tablets
+- Playback: Bluetooth A2DP sink 
 - Control: AVRCP (play/pause/next/prev + metadata)
 - Display stack: ST7789 + touch UI in [CYD-BT](CYD-BT)
 
 ### CYD Hardware Profile
 
-- Board: ESP32 CYD 2.8" class board
+- Board: ESP32-2432S028 CYD 2.8" 
 - LCD: ST7789 (SPI)
 - Touch: FT6336 (I2C)
 - Audio: I2S output path used by current firmware
@@ -140,6 +104,7 @@ idf.py -C S3-BT -p /dev/ttyUSB0 flash monitor
 ```
 
 ### Use (S3)
+  You need to connect this with a Music Assistant server on the network that runs seperately.
 
 1. Configure Wi-Fi and SlimProto settings in [S3-BT/main/main.h](S3-BT/main/main.h):
    - `MA_WIFI_SSID`
@@ -149,21 +114,6 @@ idf.py -C S3-BT -p /dev/ttyUSB0 flash monitor
 2. Flash and boot S3 firmware.
 3. Add/enable SlimProto player integration in Music Assistant.
 4. Start playback to the S3 player.
-
-### Optional BLE Audio Ingest (S3)
-
-- Service UUID: `0x00FF`
-- Characteristics:
-  - Config: `0xFF01`
-  - Audio data: `0xFF02`
-- Config payload:
-  - Raw: `[channels][sample_rate_le_lo][sample_rate_le_hi]`
-  - Framed: `[0x01][channels][sample_rate_le_lo][sample_rate_le_hi]`
-- Audio payload:
-  - Raw PCM16LE bytes
-  - Framed: `[0x02][pcm16le_bytes...]`
-
----
 
 ## Repository Layout
 
