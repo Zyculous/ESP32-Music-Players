@@ -132,6 +132,29 @@ async function checkFirmwareAvailability(manifestPath) {
   }
 }
 
+function absolutizeManifestParts(manifest, manifestUrl) {
+  if (!manifest || !Array.isArray(manifest.builds)) {
+    return manifest;
+  }
+
+  return {
+    ...manifest,
+    builds: manifest.builds.map((build) => {
+      if (!build || !Array.isArray(build.parts)) {
+        return build;
+      }
+
+      return {
+        ...build,
+        parts: build.parts.map((part) => ({
+          ...part,
+          path: new URL(part.path, manifestUrl).href
+        }))
+      };
+    })
+  };
+}
+
 async function createInstallManifest() {
   const variant = getVariant();
   const manifestPath = getPrebuiltManifestForVariant();
@@ -141,7 +164,7 @@ async function createInstallManifest() {
     throw new Error(`Failed loading manifest (${response.status})`);
   }
 
-  const manifest = await response.json();
+  const manifest = absolutizeManifestParts(await response.json(), manifestUrl);
 
   if (variant !== "cyd") {
     return manifest;
