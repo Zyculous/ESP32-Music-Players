@@ -6,7 +6,20 @@ set -euo pipefail
 mkdir -p site
 cp -R web-flasher/* site/
 
-CYD_SDKCONFIG_DEFAULTS="sdkconfig;sdkconfig.cyd-ci.defaults"
+CYD_BASE_SDKCONFIG_DEFAULTS="sdkconfig.cyd-base.defaults"
+if [[ -f sdkconfig ]]; then
+	cp sdkconfig "$CYD_BASE_SDKCONFIG_DEFAULTS"
+	CYD_SDKCONFIG_DEFAULTS="$CYD_BASE_SDKCONFIG_DEFAULTS;sdkconfig.cyd-ci.defaults"
+elif [[ -f sdkconfig.defaults ]]; then
+	CYD_SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.cyd-ci.defaults"
+else
+	CYD_SDKCONFIG_DEFAULTS="sdkconfig.cyd-ci.defaults"
+fi
+
+cleanup() {
+	rm -f "$CYD_BASE_SDKCONFIG_DEFAULTS"
+}
+trap cleanup EXIT
 
 # Build CYD default (repo root)
 idf.py -B build/cyd-default -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" set-target esp32
