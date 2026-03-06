@@ -45,6 +45,7 @@ idf.py -B build/cyd-touch-image-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAUL
 cp build/cyd-touch-image-off/bluetooth_music_player_cyd.bin site/firmware/cyd/bluetooth_music_player_cyd_touch_image_off.bin
 
 # Build S3 variant
+unset IDF_TARGET
 idf.py -C S3-BT set-target esp32s3
 idf.py -C S3-BT build
 mkdir -p site/firmware/s3
