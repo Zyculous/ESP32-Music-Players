@@ -88,7 +88,59 @@ function patchCydAppBytesWithBtNameSeed(sourceBytes, btName) {
   const nameBytes = new TextEncoder().encode(paddedName);
   sourceBytes.set(nameBytes, markerOffset);
 
+  // The ESP image checksum byte must be recomputed after mutating segment data.
+  updateEspImageChecksum(sourceBytes);
+
   return sourceBytes;
+}
+
+function updateEspImageChecksum(imageBytes) {
+  if (!(imageBytes instanceof Uint8Array) || imageBytes.length < 24) {
+    throw new Error("Invalid ESP image: too small");
+  }
+
+  const IMAGE_HEADER_MAGIC = 0xe9;
+  const IMAGE_HEADER_SIZE = 24;
+  const SEGMENT_HEADER_SIZE = 8;
+  const CHECKSUM_INITIAL = 0xef;
+
+  if (imageBytes[0] !== IMAGE_HEADER_MAGIC) {
+    throw new Error("Invalid ESP image header magic");
+  }
+
+  const segmentCount = imageBytes[1];
+  let offset = IMAGE_HEADER_SIZE;
+  let checksum = CHECKSUM_INITIAL;
+
+  for (let segmentIndex = 0; segmentIndex < segmentCount; segmentIndex += 1) {
+    if (offset + SEGMENT_HEADER_SIZE > imageBytes.length) {
+      throw new Error("Invalid ESP image: truncated segment header");
+    }
+
+    const view = new DataView(imageBytes.buffer, imageBytes.byteOffset + offset, SEGMENT_HEADER_SIZE);
+    const dataLen = view.getUint32(4, true);
+    offset += SEGMENT_HEADER_SIZE;
+
+    if (offset + dataLen > imageBytes.length) {
+      throw new Error("Invalid ESP image: truncated segment data");
+    }
+
+    for (let i = 0; i < dataLen; i += 1) {
+      checksum ^= imageBytes[offset + i];
+    }
+
+    offset += dataLen;
+  }
+
+  const unpaddedLength = offset;
+  const checksumAreaLength = ((unpaddedLength + 1 + 15) & ~15) - unpaddedLength;
+  const checksumByteIndex = unpaddedLength + checksumAreaLength - 1;
+
+  if (checksumByteIndex >= imageBytes.length) {
+    throw new Error("Invalid ESP image: checksum byte out of range");
+  }
+
+  imageBytes[checksumByteIndex] = checksum;
 }
 
 async function checkFirmwareAvailability(manifestPath) {
