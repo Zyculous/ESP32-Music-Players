@@ -62,7 +62,6 @@ direct_dependencies:
 - espressif/esp_codec_dev
 - espressif/esp_jpeg
 - espressif/esp_lcd_ili9341
-- idf
-manifest_hash: e638b69ded4800b12992235aa11d5d2fbae9ec4941214972afdc5a477b88545d
+manifest_hash: ec8ee6c7f432d6d34923542f85500984660bc21553d8ea289f4ef8bc4fbda0d8
 target: esp32s3
 version: 2.0.0

@@ -7,6 +7,11 @@ This repository contains two separate firmware targets:
 
 ## CYD Section (ESP32)
 
+## Recommended Hardware mods 
+
+  - [Audio amp gain mod](https://github.com/hexeguitar/ESP32_TFT_PIO#audio-amp-gain-mod) if you want the speaker sound to be better
+  - [Add 4MB of PSRAM](https://github.com/hexeguitar/ESP32_TFT_PIO#adding-psram) if you want to use the album image loading version of this project
+
 ### What it is
 
 CYD is the Classic Bluetooth music player build for ESP32 Cheap Yellow Display boards.
