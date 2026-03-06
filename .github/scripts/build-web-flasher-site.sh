@@ -31,17 +31,17 @@ cp build/cyd-default/bluetooth_music_player_cyd.bin site/firmware/cyd/bluetooth_
 
 # Build CYD with touch disabled
 idf.py -B build/cyd-touch-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" set-target esp32
-idf.py -B build/cyd-touch-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" -D CMAKE_C_FLAGS="-DCYD_FEATURE_TOUCH=0 -DCYD_FEATURE_IMAGE_LOADING=1" build
+idf.py -B build/cyd-touch-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" -D CYD_ENABLE_TOUCH=OFF -D CYD_ENABLE_IMAGE_LOADING=ON build
 cp build/cyd-touch-off/bluetooth_music_player_cyd.bin site/firmware/cyd/bluetooth_music_player_cyd_touch_off.bin
 
 # Build CYD with image loading disabled
 idf.py -B build/cyd-image-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" set-target esp32
-idf.py -B build/cyd-image-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" -D CMAKE_C_FLAGS="-DCYD_FEATURE_TOUCH=1 -DCYD_FEATURE_IMAGE_LOADING=0" build
+idf.py -B build/cyd-image-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" -D CYD_ENABLE_TOUCH=ON -D CYD_ENABLE_IMAGE_LOADING=OFF build
 cp build/cyd-image-off/bluetooth_music_player_cyd.bin site/firmware/cyd/bluetooth_music_player_cyd_image_off.bin
 
 # Build CYD with both touch and image loading disabled
 idf.py -B build/cyd-touch-image-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" set-target esp32
-idf.py -B build/cyd-touch-image-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" -D CMAKE_C_FLAGS="-DCYD_FEATURE_TOUCH=0 -DCYD_FEATURE_IMAGE_LOADING=0" build
+idf.py -B build/cyd-touch-image-off -D SDKCONFIG_DEFAULTS="$CYD_SDKCONFIG_DEFAULTS" -D CYD_ENABLE_TOUCH=OFF -D CYD_ENABLE_IMAGE_LOADING=OFF build
 cp build/cyd-touch-image-off/bluetooth_music_player_cyd.bin site/firmware/cyd/bluetooth_music_player_cyd_touch_image_off.bin
 
 # Build S3 variant
