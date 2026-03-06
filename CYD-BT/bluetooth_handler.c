@@ -106,14 +106,21 @@ static void load_or_seed_bt_name(char *out_name, size_t out_size)
         return;
     }
 
+    char seeded_name[BT_WEBFLASH_SEED_LEN + 1] = {0};
+    get_seeded_bt_name(seeded_name, sizeof(seeded_name));
+
     size_t len = out_size;
     err = nvs_get_str(nvs_handle, BT_NAME_NVS_KEY, out_name, &len);
     if (err == ESP_OK && out_name[0] != '\0') {
-        nvs_close(nvs_handle);
-        return;
+        if (strncmp(out_name, seeded_name, out_size) == 0) {
+            nvs_close(nvs_handle);
+            return;
+        }
+
+        ESP_LOGI(TAG, "Updating BT name from flashed seed: '%s' -> '%s'", out_name, seeded_name);
     }
 
-    get_seeded_bt_name(out_name, out_size);
+    snprintf(out_name, out_size, "%s", seeded_name);
     err = nvs_set_str(nvs_handle, BT_NAME_NVS_KEY, out_name);
     if (err == ESP_OK) {
         err = nvs_commit(nvs_handle);
