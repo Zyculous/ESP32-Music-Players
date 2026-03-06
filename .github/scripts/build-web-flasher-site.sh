@@ -16,8 +16,19 @@ else
 	CYD_SDKCONFIG_DEFAULTS="sdkconfig.cyd-ci.defaults"
 fi
 
+S3_BASE_SDKCONFIG_DEFAULTS="S3-BT/sdkconfig.s3-base.defaults"
+if [[ -f S3-BT/sdkconfig ]]; then
+	cp S3-BT/sdkconfig "$S3_BASE_SDKCONFIG_DEFAULTS"
+	S3_SDKCONFIG_DEFAULTS="sdkconfig.s3-base.defaults;sdkconfig.s3-ci.defaults"
+elif [[ -f S3-BT/sdkconfig.defaults ]]; then
+	S3_SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.s3-ci.defaults"
+else
+	S3_SDKCONFIG_DEFAULTS="sdkconfig.s3-ci.defaults"
+fi
+
 cleanup() {
 	rm -f "$CYD_BASE_SDKCONFIG_DEFAULTS"
+	rm -f "$S3_BASE_SDKCONFIG_DEFAULTS"
 }
 trap cleanup EXIT
 
@@ -46,8 +57,8 @@ cp build/cyd-touch-image-off/bluetooth_music_player_cyd.bin site/firmware/cyd/bl
 
 # Build S3 variant
 unset IDF_TARGET
-idf.py -C S3-BT set-target esp32s3
-idf.py -C S3-BT build
+idf.py -C S3-BT -D SDKCONFIG_DEFAULTS="$S3_SDKCONFIG_DEFAULTS" set-target esp32s3
+idf.py -C S3-BT -D SDKCONFIG_DEFAULTS="$S3_SDKCONFIG_DEFAULTS" build
 mkdir -p site/firmware/s3
 cp S3-BT/build/bootloader/bootloader.bin site/firmware/s3/bootloader.bin
 cp S3-BT/build/partition_table/partition-table.bin site/firmware/s3/partition-table.bin
