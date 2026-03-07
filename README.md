@@ -21,6 +21,12 @@ CYD is the Classic Bluetooth music player build for ESP32 Cheap Yellow Display b
 - Control: AVRCP (play/pause/next/prev + metadata)
 - Display stack: ST7789 + touch UI in [CYD-BT](CYD-BT)
 
+# Images
+
+  [Display with image loaded](images/CYD_1.jpg)
+  [Display with no image](images/CYD_2.jpg)
+  [Display with no image](images/CYD_3.jpg)
+
 ### CYD Hardware Profile
 
 - Board: ESP32-2432S028 CYD 2.8" 
@@ -76,7 +82,14 @@ Helper scripts (repo root):
 
 ---
 
-## S3 Section (ESP32-S3)
+### S3 Section (ESP32-S3)
+
+
+## THIS IS A WORK IN PROGRESS
+
+It is very close to functional but audio still wont output through the onboard speaker output
+It should work if you choose to hook it up to an amp but the display is also a mess right now so just don't use this yet
+
 
 ### What it is
 

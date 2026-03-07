@@ -5,6 +5,9 @@ static const char *TAG = "TOUCH";
 
 #define TOUCH_POLL_MS 30
 #define TOUCH_DEBOUNCE_MS 180
+#define TOUCH_BUTTON_HITBOX_PAD 10
+#define TOUCH_MOVE_LOG_INTERVAL_MS 200
+#define TOUCH_I2C_ERR_LOG_EVERY 25
 #define FT6336_REG_TD_STATUS 0x02
 #define FT6336_REG_P1_XH 0x03
 #define FT6336_REG_P1_XL 0x04
@@ -14,6 +17,7 @@ static const char *TAG = "TOUCH";
 static bool s_touch_initialized = false;
 static uint32_t s_last_touch_tick = 0;
 static i2c_master_dev_handle_t s_touch_dev_handle = NULL;
+static uint32_t s_touch_i2c_err_count = 0;
 
 static uint8_t touch_volume_from_x(uint16_t x)
 {
@@ -37,6 +41,46 @@ static bool touch_in_rect(uint16_t x, uint16_t y, int rect_x, int rect_y, int re
     return (x >= rect_x) && (x < (rect_x + rect_w)) && (y >= rect_y) && (y < (rect_y + rect_h));
 }
 
+static bool touch_in_rect_padded(uint16_t x,
+                                 uint16_t y,
+                                 int rect_x,
+                                 int rect_y,
+                                 int rect_w,
+                                 int rect_h,
+                                 int pad)
+{
+    int px = rect_x - pad;
+    int py = rect_y - pad;
+    int pw = rect_w + (pad * 2);
+    int ph = rect_h + (pad * 2);
+    return touch_in_rect(x, y, px, py, pw, ph);
+}
+
+static bool touch_in_transport_buttons(uint16_t x, uint16_t y)
+{
+    return touch_in_rect_padded(x,
+                                y,
+                                PREV_BUTTON_X,
+                                PLAY_BUTTON_Y,
+                                BUTTON_SIZE,
+                                BUTTON_SIZE,
+                                TOUCH_BUTTON_HITBOX_PAD) ||
+           touch_in_rect_padded(x,
+                                y,
+                                PLAY_BUTTON_X,
+                                PLAY_BUTTON_Y,
+                                BUTTON_SIZE,
+                                BUTTON_SIZE,
+                                TOUCH_BUTTON_HITBOX_PAD) ||
+           touch_in_rect_padded(x,
+                                y,
+                                NEXT_BUTTON_X,
+                                PLAY_BUTTON_Y,
+                                BUTTON_SIZE,
+                                BUTTON_SIZE,
+                                TOUCH_BUTTON_HITBOX_PAD);
+}
+
 static bool touch_read_point(uint16_t *out_x, uint16_t *out_y)
 {
     if (!out_x || !out_y) {
@@ -56,6 +100,13 @@ static bool touch_read_point(uint16_t *out_x, uint16_t *out_y)
                                                  1,
                                                  10);
     if (ret != ESP_OK) {
+        s_touch_i2c_err_count++;
+        if ((s_touch_i2c_err_count % TOUCH_I2C_ERR_LOG_EVERY) == 0) {
+            ESP_LOGW(TAG,
+                     "touch status read failed x%lu: %s",
+                     (unsigned long)s_touch_i2c_err_count,
+                     esp_err_to_name(ret));
+        }
         return false;
     }
 
@@ -73,6 +124,13 @@ static bool touch_read_point(uint16_t *out_x, uint16_t *out_y)
                                       sizeof(xy),
                                       10);
     if (ret != ESP_OK) {
+        s_touch_i2c_err_count++;
+        if ((s_touch_i2c_err_count % TOUCH_I2C_ERR_LOG_EVERY) == 0) {
+            ESP_LOGW(TAG,
+                     "touch xy read failed x%lu: %s",
+                     (unsigned long)s_touch_i2c_err_count,
+                     esp_err_to_name(ret));
+        }
         return false;
     }
 
@@ -115,12 +173,24 @@ static void touch_handle_press(uint16_t x, uint16_t y)
         return;
     }
 
-    if (touch_in_rect(x, y, PREV_BUTTON_X, PLAY_BUTTON_Y, BUTTON_SIZE, BUTTON_SIZE)) {
+    if (touch_in_rect_padded(x,
+                             y,
+                             PREV_BUTTON_X,
+                             PLAY_BUTTON_Y,
+                             BUTTON_SIZE,
+                             BUTTON_SIZE,
+                             TOUCH_BUTTON_HITBOX_PAD)) {
         send_avrc_command(ESP_AVRC_PT_CMD_BACKWARD);
         return;
     }
 
-    if (touch_in_rect(x, y, PLAY_BUTTON_X, PLAY_BUTTON_Y, BUTTON_SIZE, BUTTON_SIZE)) {
+    if (touch_in_rect_padded(x,
+                             y,
+                             PLAY_BUTTON_X,
+                             PLAY_BUTTON_Y,
+                             BUTTON_SIZE,
+                             BUTTON_SIZE,
+                             TOUCH_BUTTON_HITBOX_PAD)) {
         bool is_playing = false;
         if (xSemaphoreTake(g_player_state_mutex, pdMS_TO_TICKS(20)) == pdTRUE) {
             is_playing = g_player_state.metadata.is_playing;
@@ -130,7 +200,13 @@ static void touch_handle_press(uint16_t x, uint16_t y)
         return;
     }
 
-    if (touch_in_rect(x, y, NEXT_BUTTON_X, PLAY_BUTTON_Y, BUTTON_SIZE, BUTTON_SIZE)) {
+    if (touch_in_rect_padded(x,
+                             y,
+                             NEXT_BUTTON_X,
+                             PLAY_BUTTON_Y,
+                             BUTTON_SIZE,
+                             BUTTON_SIZE,
+                             TOUCH_BUTTON_HITBOX_PAD)) {
         send_avrc_command(ESP_AVRC_PT_CMD_FORWARD);
     }
 }
@@ -197,7 +273,9 @@ void touch_task(void *params)
 {
     (void)params;
 
+    bool transport_press_handled = false;
     bool was_pressed = false;
+    uint32_t last_move_log_tick = 0;
 
     while (1) {
         if (!s_touch_initialized) {
@@ -209,18 +287,38 @@ void touch_task(void *params)
         uint16_t y = 0;
         bool pressed = touch_read_point(&x, &y);
 
-        if (pressed && touch_in_rect(x, y, VOLUME_SLIDER_X, VOLUME_SLIDER_Y, VOLUME_SLIDER_W, VOLUME_SLIDER_H + 6)) {
+        if (!pressed) {
+            if (was_pressed) {
+                ESP_LOGI(TAG, "touch up");
+            }
+            was_pressed = false;
+            transport_press_handled = false;
+            vTaskDelay(pdMS_TO_TICKS(TOUCH_POLL_MS));
+            continue;
+        }
+
+        uint32_t now = xTaskGetTickCount();
+        if (!was_pressed) {
+            ESP_LOGI(TAG, "touch down x=%u y=%u", (unsigned)x, (unsigned)y);
+            last_move_log_tick = now;
+        } else if ((now - last_move_log_tick) >= pdMS_TO_TICKS(TOUCH_MOVE_LOG_INTERVAL_MS)) {
+            ESP_LOGI(TAG, "touch move x=%u y=%u", (unsigned)x, (unsigned)y);
+            last_move_log_tick = now;
+        }
+
+        if (touch_in_rect(x, y, VOLUME_SLIDER_X, VOLUME_SLIDER_Y, VOLUME_SLIDER_W, VOLUME_SLIDER_H + 6)) {
             touch_handle_press(x, y);
-        } else if (pressed && !was_pressed) {
-            uint32_t now = xTaskGetTickCount();
+        } else if (!transport_press_handled && touch_in_transport_buttons(x, y)) {
             if ((now - s_last_touch_tick) > pdMS_TO_TICKS(TOUCH_DEBOUNCE_MS)) {
                 s_last_touch_tick = now;
                 ESP_LOGI(TAG, "touch x=%u y=%u", (unsigned)x, (unsigned)y);
                 touch_handle_press(x, y);
+                transport_press_handled = true;
             }
         }
 
-        was_pressed = pressed;
+        was_pressed = true;
+
         vTaskDelay(pdMS_TO_TICKS(TOUCH_POLL_MS));
     }
 }
