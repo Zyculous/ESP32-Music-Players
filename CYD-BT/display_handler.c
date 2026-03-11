@@ -32,11 +32,9 @@ static uint16_t s_cover_scale_line_buffer[COVER_ART_SIZE];
 
 static void *alloc_prefer_spiram(size_t size)
 {
-    void *ptr = heap_caps_malloc(size, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    if (ptr) {
-        return ptr;
-    }
-    return heap_caps_malloc(size, MALLOC_CAP_8BIT);
+    // Image decode buffers are large; keep them in PSRAM only.
+    // Falling back to internal RAM would starve the Bluetooth stack.
+    return heap_caps_malloc(size, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
 }
 
 static void draw_cover_placeholder(const char *line1, const char *line2)
@@ -250,8 +248,7 @@ esp_err_t display_init(void)
     if (!s_cover_decode_buffer) {
         s_cover_decode_buffer = alloc_prefer_spiram(COVER_DECODE_TARGET * COVER_DECODE_TARGET * sizeof(uint16_t));
         if (!s_cover_decode_buffer) {
-            ESP_LOGE(TAG, "Failed to allocate cover decode buffer");
-            goto init_nomem;
+            ESP_LOGW(TAG, "Cover decode buffer unavailable; cover art decoding disabled");
         }
     }
 #endif
@@ -682,10 +679,10 @@ void display_draw_ui(void)
     display_draw_string(COVER_ART_X + 21, COVER_ART_Y + 55, "NO COVER", COLOR_GRAY);
 
     // Draw control buttons
-    ui_draw_button(PREV_BUTTON_X, PLAY_BUTTON_Y, BUTTON_SIZE, "<<", false);
-    ui_draw_button(PLAY_BUTTON_X, PLAY_BUTTON_Y, BUTTON_SIZE, 
+    ui_draw_button(PREV_BUTTON_X, PLAY_BUTTON_Y, PREV_BUTTON_W, BUTTON_H, "<<", false);
+    ui_draw_button(PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_W, BUTTON_H, 
                    g_player_state.metadata.is_playing ? "||" : ">", false);
-    ui_draw_button(NEXT_BUTTON_X, PLAY_BUTTON_Y, BUTTON_SIZE, ">>", false);
+    ui_draw_button(NEXT_BUTTON_X, PLAY_BUTTON_Y, NEXT_BUTTON_W, BUTTON_H, ">>", false);
 
     // Draw track info
     display_update_track_info(&g_player_state.metadata);
@@ -731,6 +728,6 @@ void display_reset_cover_art_queue(void)
 
 void display_update_play_button(bool is_playing)
 {
-    ui_draw_button(PLAY_BUTTON_X, PLAY_BUTTON_Y, BUTTON_SIZE, 
+    ui_draw_button(PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_W, BUTTON_H, 
                    is_playing ? "||" : ">", false);
 }

@@ -21,32 +21,6 @@ static TaskHandle_t s_audio_task_handle = NULL;
 static bool s_audio_initialized = false;
 static uint32_t s_current_sample_rate = 44100;
 static uint8_t s_current_channels = 2;
-#if CYD_FEATURE_TOUCH
-static i2c_master_bus_handle_t s_i2c_bus_handle = NULL;
-
-static esp_err_t audio_setup_i2c_bus(void)
-{
-    if (s_i2c_bus_handle) {
-        return ESP_OK;
-    }
-
-    i2c_master_bus_config_t i2c_cfg = {
-        .i2c_port = I2C_NUM_CH,
-        .sda_io_num = I2C_SDA_IO,
-        .scl_io_num = I2C_SCL_IO,
-        .clk_source = I2C_CLK_SRC_DEFAULT,
-        .glitch_ignore_cnt = 7,
-        .flags.enable_internal_pullup = true,
-    };
-
-    return i2c_new_master_bus(&i2c_cfg, &s_i2c_bus_handle);
-}
-
-i2c_master_bus_handle_t audio_get_shared_i2c_bus(void)
-{
-    return s_i2c_bus_handle;
-}
-#endif
 
 void audio_set_volume(uint8_t volume)
 {
@@ -122,13 +96,6 @@ esp_err_t audio_init(void)
     }
 
     esp_err_t err = ESP_OK;
-#if CYD_FEATURE_TOUCH
-    err = audio_setup_i2c_bus();
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "i2c bus init failed: %s", esp_err_to_name(err));
-        return err;
-    }
-#endif
 
     i2s_config_t i2s_config = {
         .mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN,
@@ -150,7 +117,7 @@ esp_err_t audio_init(void)
         return err;
     }
 
-    err = i2s_set_dac_mode(I2S_DAC_CHANNEL_BOTH_EN);
+    err = i2s_set_dac_mode(I2S_DAC_CHANNEL_LEFT_EN);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "i2s_set_dac_mode failed: %s", esp_err_to_name(err));
         i2s_driver_uninstall(I2S_NUM_CH);

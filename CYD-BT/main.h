@@ -29,9 +29,6 @@
 #include "esp_lcd_panel_ops.h"
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
-#if CYD_FEATURE_TOUCH
-#include "driver/i2c_master.h"
-#endif
 #include "driver/i2s_std.h"
 #include "esp_err.h"
 
@@ -48,24 +45,24 @@
 #define PIN_NUM_RST        GPIO_NUM_NC
 #define PIN_NUM_BK_LIGHT   GPIO_NUM_21
 
-// I2S configuration for CYD onboard audio (MAX98357A)
+// I2S configuration for CYD onboard audio (internal DAC on GPIO26 only)
 #define I2S_NUM_CH         I2S_NUM_0
-#define I2S_BCK_IO         GPIO_NUM_26  // Bit clock 
-#define I2S_WS_IO          GPIO_NUM_27  // Word select
-#define I2S_DO_IO          GPIO_NUM_25  // Data out
 
-// Shared I2C bus for FT6336 touch
-#define I2C_NUM_CH         I2C_NUM_0
-#define I2C_SDA_IO         GPIO_NUM_33
-#define I2C_SCL_IO         GPIO_NUM_32
+// XPT2046 resistive touch (software SPI)
+#define TOUCH_SPI_CLK      GPIO_NUM_25
+#define TOUCH_SPI_CS       GPIO_NUM_33
+#define TOUCH_SPI_MOSI     GPIO_NUM_32
+#define TOUCH_SPI_MISO     GPIO_NUM_39
+#define TOUCH_IRQ_IO       GPIO_NUM_36
 
-// FT6336 touch
-#define TOUCH_I2C_ADDR     0x38
-#define TOUCH_INT_IO       GPIO_NUM_36
-#define TOUCH_RST_IO       GPIO_NUM_NC
+// XPT2046 calibration (raw 12-bit ADC range mapped to screen pixels)
+#define TOUCH_RAW_X_MIN    200
+#define TOUCH_RAW_X_MAX    3800
+#define TOUCH_RAW_Y_MIN    200
+#define TOUCH_RAW_Y_MAX    3800
 #define TOUCH_MAP_SWAP_XY  1
-#define TOUCH_INVERT_X     0
-#define TOUCH_INVERT_Y     0
+#define TOUCH_INVERT_X     1
+#define TOUCH_INVERT_Y     1
 
 // LCD dimensions
 #define LCD_H_RES          320
@@ -85,11 +82,14 @@
 #define TIMELINE_H         10
 
 // UI Elements positions and sizes
-#define PLAY_BUTTON_X      140
-#define PLAY_BUTTON_Y      180  
-#define BUTTON_SIZE        50
-#define PREV_BUTTON_X      70
-#define NEXT_BUTTON_X      220
+#define PLAY_BUTTON_X      94
+#define PLAY_BUTTON_Y      190
+#define PLAY_BUTTON_W      132
+#define BUTTON_H           50
+#define PREV_BUTTON_X      0
+#define PREV_BUTTON_W      90
+#define NEXT_BUTTON_X      230
+#define NEXT_BUTTON_W      90
 
 #define COVER_ART_X        10
 #define COVER_ART_Y        35
@@ -102,9 +102,9 @@
 #define ALBUM_NAME_X       140
 #define ALBUM_NAME_Y       80
 
-#define VOLUME_SLIDER_X    12
-#define VOLUME_SLIDER_Y    8
-#define VOLUME_SLIDER_W    296
+#define VOLUME_SLIDER_X    0
+#define VOLUME_SLIDER_Y    0
+#define VOLUME_SLIDER_W    320
 #define VOLUME_SLIDER_H    14
 
 // Bluetooth device name
@@ -182,12 +182,9 @@ esp_err_t audio_reconfigure(uint32_t sample_rate, uint8_t channels);
 void audio_data_callback(const uint8_t *data, uint32_t len);
 void audio_reset_buffers(void);
 void audio_set_volume(uint8_t volume);
-#if CYD_FEATURE_TOUCH
-i2c_master_bus_handle_t audio_get_shared_i2c_bus(void);
-#endif
 
 // UI functions  
-void ui_draw_button(int x, int y, int size, const char *text, bool pressed);
+void ui_draw_button(int x, int y, int w, int h, const char *text, bool pressed);
 void ui_update_display(void);
 void ui_request_refresh(uint32_t flags);
 void ui_tick_250ms(void);

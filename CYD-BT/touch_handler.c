@@ -1,23 +1,173 @@
 #include "main.h"
 #include "esp_check.h"
+#include "esp_rom_sys.h"
 
 static const char *TAG = "TOUCH";
 
 #define TOUCH_POLL_MS 30
 #define TOUCH_DEBOUNCE_MS 180
-#define TOUCH_BUTTON_HITBOX_PAD 10
+#define TOUCH_BUTTON_HITBOX_PAD 20
 #define TOUCH_MOVE_LOG_INTERVAL_MS 200
-#define TOUCH_I2C_ERR_LOG_EVERY 25
-#define FT6336_REG_TD_STATUS 0x02
-#define FT6336_REG_P1_XH 0x03
-#define FT6336_REG_P1_XL 0x04
-#define FT6336_REG_P1_YH 0x05
-#define FT6336_REG_P1_YL 0x06
+#define TOUCH_SAMPLES 5
+#define TOUCH_PRESSURE_THRESHOLD 100
+
+/* XPT2046 control byte bit fields:
+ *   S  A2 A1 A0  MODE SER/DFR PD1 PD0
+ *   1  x  x  x   0     0      0   0
+ * X+: A2=1, A1=0, A0=1 → 0xD0
+ * Y+: A2=0, A1=0, A0=1 → 0x90
+ * Z1: A2=0, A1=1, A0=1 → 0xB0
+ * Z2: A2=1, A1=0, A0=0 → 0xC0
+ */
+#define XPT2046_CMD_X  0xD0
+#define XPT2046_CMD_Y  0x90
+#define XPT2046_CMD_Z1 0xB0
+#define XPT2046_CMD_Z2 0xC0
 
 static bool s_touch_initialized = false;
 static uint32_t s_last_touch_tick = 0;
-static i2c_master_dev_handle_t s_touch_dev_handle = NULL;
-static uint32_t s_touch_i2c_err_count = 0;
+
+/* ── Software SPI bit-bang for XPT2046 ─────────────────────────────── */
+
+static void xpt2046_gpio_init(void)
+{
+    gpio_config_t out_cfg = {
+        .mode = GPIO_MODE_OUTPUT,
+        .pin_bit_mask = (1ULL << TOUCH_SPI_CLK) |
+                        (1ULL << TOUCH_SPI_CS)  |
+                        (1ULL << TOUCH_SPI_MOSI),
+    };
+    gpio_config(&out_cfg);
+
+    gpio_config_t in_cfg = {
+        .mode = GPIO_MODE_INPUT,
+        .pin_bit_mask = (1ULL << TOUCH_SPI_MISO) |
+                        (1ULL << TOUCH_IRQ_IO),
+    };
+    gpio_config(&in_cfg);
+
+    gpio_set_level(TOUCH_SPI_CS, 1);
+    gpio_set_level(TOUCH_SPI_CLK, 0);
+}
+
+static uint16_t xpt2046_transfer(uint8_t cmd)
+{
+    gpio_set_level(TOUCH_SPI_CS, 0);
+
+    /* Send 8-bit command, MSB first */
+    for (int bit = 7; bit >= 0; bit--) {
+        gpio_set_level(TOUCH_SPI_MOSI, (cmd >> bit) & 1);
+        gpio_set_level(TOUCH_SPI_CLK, 1);
+        esp_rom_delay_us(1);
+        gpio_set_level(TOUCH_SPI_CLK, 0);
+        esp_rom_delay_us(1);
+    }
+
+    /* One BUSY clock cycle */
+    gpio_set_level(TOUCH_SPI_CLK, 1);
+    esp_rom_delay_us(1);
+    gpio_set_level(TOUCH_SPI_CLK, 0);
+    esp_rom_delay_us(1);
+
+    /* Read 12-bit result, MSB first */
+    uint16_t val = 0;
+    for (int i = 0; i < 12; i++) {
+        gpio_set_level(TOUCH_SPI_CLK, 1);
+        esp_rom_delay_us(1);
+        val <<= 1;
+        if (gpio_get_level(TOUCH_SPI_MISO)) {
+            val |= 1;
+        }
+        gpio_set_level(TOUCH_SPI_CLK, 0);
+        esp_rom_delay_us(1);
+    }
+
+    gpio_set_level(TOUCH_SPI_CS, 1);
+    return val;
+}
+
+/* Read a channel N times, discard min/max, return average */
+static uint16_t xpt2046_read_avg(uint8_t cmd)
+{
+    uint16_t samples[TOUCH_SAMPLES];
+    for (int i = 0; i < TOUCH_SAMPLES; i++) {
+        samples[i] = xpt2046_transfer(cmd);
+    }
+
+    uint16_t smin = samples[0], smax = samples[0];
+    uint32_t sum = samples[0];
+    for (int i = 1; i < TOUCH_SAMPLES; i++) {
+        if (samples[i] < smin) smin = samples[i];
+        if (samples[i] > smax) smax = samples[i];
+        sum += samples[i];
+    }
+
+    if (TOUCH_SAMPLES > 2) {
+        sum -= smin;
+        sum -= smax;
+        return (uint16_t)(sum / (TOUCH_SAMPLES - 2));
+    }
+    return (uint16_t)(sum / TOUCH_SAMPLES);
+}
+
+/* ── Coordinate mapping ────────────────────────────────────────────── */
+
+static bool touch_read_point(uint16_t *out_x, uint16_t *out_y)
+{
+    if (!out_x || !out_y) {
+        return false;
+    }
+
+    /* Check T_IRQ — active low when screen is being touched */
+    if (gpio_get_level(TOUCH_IRQ_IO) != 0) {
+        return false;
+    }
+
+    uint16_t raw_x = xpt2046_read_avg(XPT2046_CMD_X);
+    uint16_t raw_y = xpt2046_read_avg(XPT2046_CMD_Y);
+
+    /* Basic pressure check via Z readings */
+    uint16_t z1 = xpt2046_transfer(XPT2046_CMD_Z1);
+    uint16_t z2 = xpt2046_transfer(XPT2046_CMD_Z2);
+    int pressure = z1 + (4095 - z2);
+    if (pressure < TOUCH_PRESSURE_THRESHOLD) {
+        return false;
+    }
+
+    /* Map raw ADC range → pixel range */
+    int32_t px = (int32_t)(raw_x - TOUCH_RAW_X_MIN) * (int32_t)LCD_H_RES
+                 / (int32_t)(TOUCH_RAW_X_MAX - TOUCH_RAW_X_MIN);
+    int32_t py = (int32_t)(raw_y - TOUCH_RAW_Y_MIN) * (int32_t)LCD_V_RES
+                 / (int32_t)(TOUCH_RAW_Y_MAX - TOUCH_RAW_Y_MIN);
+
+    if (px < 0) px = 0;
+    if (py < 0) py = 0;
+    if (px >= LCD_H_RES) px = LCD_H_RES - 1;
+    if (py >= LCD_V_RES) py = LCD_V_RES - 1;
+
+    uint16_t mapped_x = (uint16_t)px;
+    uint16_t mapped_y = (uint16_t)py;
+
+#if TOUCH_MAP_SWAP_XY
+    { uint16_t tmp = mapped_x; mapped_x = mapped_y; mapped_y = tmp; }
+    if (mapped_x >= LCD_H_RES) mapped_x = LCD_H_RES - 1;
+    if (mapped_y >= LCD_V_RES) mapped_y = LCD_V_RES - 1;
+#endif
+
+#if TOUCH_INVERT_X
+    mapped_x = LCD_H_RES - 1 - mapped_x;
+#endif
+
+#if TOUCH_INVERT_Y
+    mapped_y = LCD_V_RES - 1 - mapped_y;
+#endif
+
+    *out_x = mapped_x;
+    *out_y = mapped_y;
+    return true;
+}
+
+/* ── UI hit-testing (unchanged from original) ──────────────────────── */
 
 static uint8_t touch_volume_from_x(uint16_t x)
 {
@@ -62,107 +212,23 @@ static bool touch_in_transport_buttons(uint16_t x, uint16_t y)
                                 y,
                                 PREV_BUTTON_X,
                                 PLAY_BUTTON_Y,
-                                BUTTON_SIZE,
-                                BUTTON_SIZE,
+                                PREV_BUTTON_W,
+                                BUTTON_H,
                                 TOUCH_BUTTON_HITBOX_PAD) ||
            touch_in_rect_padded(x,
                                 y,
                                 PLAY_BUTTON_X,
                                 PLAY_BUTTON_Y,
-                                BUTTON_SIZE,
-                                BUTTON_SIZE,
+                                PLAY_BUTTON_W,
+                                BUTTON_H,
                                 TOUCH_BUTTON_HITBOX_PAD) ||
            touch_in_rect_padded(x,
                                 y,
                                 NEXT_BUTTON_X,
                                 PLAY_BUTTON_Y,
-                                BUTTON_SIZE,
-                                BUTTON_SIZE,
+                                NEXT_BUTTON_W,
+                                BUTTON_H,
                                 TOUCH_BUTTON_HITBOX_PAD);
-}
-
-static bool touch_read_point(uint16_t *out_x, uint16_t *out_y)
-{
-    if (!out_x || !out_y) {
-        return false;
-    }
-
-    if (!s_touch_dev_handle) {
-        return false;
-    }
-
-    uint8_t status_reg = FT6336_REG_TD_STATUS;
-    uint8_t status = 0;
-    esp_err_t ret = i2c_master_transmit_receive(s_touch_dev_handle,
-                                                 &status_reg,
-                                                 1,
-                                                 &status,
-                                                 1,
-                                                 10);
-    if (ret != ESP_OK) {
-        s_touch_i2c_err_count++;
-        if ((s_touch_i2c_err_count % TOUCH_I2C_ERR_LOG_EVERY) == 0) {
-            ESP_LOGW(TAG,
-                     "touch status read failed x%lu: %s",
-                     (unsigned long)s_touch_i2c_err_count,
-                     esp_err_to_name(ret));
-        }
-        return false;
-    }
-
-    uint8_t touch_points = status & 0x0F;
-    if (touch_points == 0) {
-        return false;
-    }
-
-    uint8_t xy_reg = FT6336_REG_P1_XH;
-    uint8_t xy[4] = {0};
-    ret = i2c_master_transmit_receive(s_touch_dev_handle,
-                                      &xy_reg,
-                                      1,
-                                      xy,
-                                      sizeof(xy),
-                                      10);
-    if (ret != ESP_OK) {
-        s_touch_i2c_err_count++;
-        if ((s_touch_i2c_err_count % TOUCH_I2C_ERR_LOG_EVERY) == 0) {
-            ESP_LOGW(TAG,
-                     "touch xy read failed x%lu: %s",
-                     (unsigned long)s_touch_i2c_err_count,
-                     esp_err_to_name(ret));
-        }
-        return false;
-    }
-
-    uint16_t raw_x = ((xy[0] & 0x0F) << 8) | xy[1];
-    uint16_t raw_y = ((xy[2] & 0x0F) << 8) | xy[3];
-
-    uint16_t mapped_x = raw_x;
-    uint16_t mapped_y = raw_y;
-
-#if TOUCH_MAP_SWAP_XY
-    mapped_x = raw_y;
-    mapped_y = raw_x;
-#endif
-
-#if TOUCH_INVERT_X
-    mapped_x = (mapped_x >= LCD_H_RES) ? 0 : (LCD_H_RES - 1 - mapped_x);
-#endif
-
-#if TOUCH_INVERT_Y
-    mapped_y = (mapped_y >= LCD_V_RES) ? 0 : (LCD_V_RES - 1 - mapped_y);
-#endif
-
-    if (mapped_x >= LCD_H_RES) {
-        mapped_x = LCD_H_RES - 1;
-    }
-    if (mapped_y >= LCD_V_RES) {
-        mapped_y = LCD_V_RES - 1;
-    }
-
-    *out_x = mapped_x;
-    *out_y = mapped_y;
-    return true;
 }
 
 static void touch_handle_press(uint16_t x, uint16_t y)
@@ -177,8 +243,8 @@ static void touch_handle_press(uint16_t x, uint16_t y)
                              y,
                              PREV_BUTTON_X,
                              PLAY_BUTTON_Y,
-                             BUTTON_SIZE,
-                             BUTTON_SIZE,
+                             PREV_BUTTON_W,
+                             BUTTON_H,
                              TOUCH_BUTTON_HITBOX_PAD)) {
         send_avrc_command(ESP_AVRC_PT_CMD_BACKWARD);
         return;
@@ -188,8 +254,8 @@ static void touch_handle_press(uint16_t x, uint16_t y)
                              y,
                              PLAY_BUTTON_X,
                              PLAY_BUTTON_Y,
-                             BUTTON_SIZE,
-                             BUTTON_SIZE,
+                             PLAY_BUTTON_W,
+                             BUTTON_H,
                              TOUCH_BUTTON_HITBOX_PAD)) {
         bool is_playing = false;
         if (xSemaphoreTake(g_player_state_mutex, pdMS_TO_TICKS(20)) == pdTRUE) {
@@ -204,12 +270,14 @@ static void touch_handle_press(uint16_t x, uint16_t y)
                              y,
                              NEXT_BUTTON_X,
                              PLAY_BUTTON_Y,
-                             BUTTON_SIZE,
-                             BUTTON_SIZE,
+                             NEXT_BUTTON_W,
+                             BUTTON_H,
                              TOUCH_BUTTON_HITBOX_PAD)) {
         send_avrc_command(ESP_AVRC_PT_CMD_FORWARD);
     }
 }
+
+/* ── Init & task ───────────────────────────────────────────────────── */
 
 esp_err_t touch_init(void)
 {
@@ -217,55 +285,16 @@ esp_err_t touch_init(void)
         return ESP_OK;
     }
 
-    i2c_master_bus_handle_t bus = audio_get_shared_i2c_bus();
-    if (!bus) {
-        ESP_LOGE(TAG, "Shared I2C bus not initialized");
-        return ESP_FAIL;
-    }
+    xpt2046_gpio_init();
 
-    if (!s_touch_dev_handle) {
-        i2c_device_config_t dev_cfg = {
-            .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-            .device_address = TOUCH_I2C_ADDR,
-            .scl_speed_hz = 400000,
-        };
-        ESP_RETURN_ON_ERROR(i2c_master_bus_add_device(bus, &dev_cfg, &s_touch_dev_handle),
-                            TAG,
-                            "touch i2c add device failed");
-    }
-
-#if TOUCH_RST_IO != GPIO_NUM_NC
-    {
-        gpio_config_t rst_cfg = {
-            .mode = GPIO_MODE_OUTPUT,
-            .pin_bit_mask = 1ULL << TOUCH_RST_IO,
-        };
-        ESP_RETURN_ON_ERROR(gpio_config(&rst_cfg), TAG, "touch rst gpio config failed");
-
-        gpio_set_level(TOUCH_RST_IO, 0);
-        vTaskDelay(pdMS_TO_TICKS(10));
-        gpio_set_level(TOUCH_RST_IO, 1);
-        vTaskDelay(pdMS_TO_TICKS(60));
-    }
-#endif
-
-#if TOUCH_INT_IO != GPIO_NUM_NC
-    {
-        gpio_config_t int_cfg = {
-            .mode = GPIO_MODE_INPUT,
-            .pull_up_en = GPIO_PULLUP_ENABLE,
-            .pin_bit_mask = 1ULL << TOUCH_INT_IO,
-        };
-        ESP_RETURN_ON_ERROR(gpio_config(&int_cfg), TAG, "touch int gpio config failed");
-    }
-#endif
-
-    uint16_t x = 0;
-    uint16_t y = 0;
-    (void)touch_read_point(&x, &y);
+    /* Probe: check if T_IRQ responds (briefly touch or just verify GPIO reads) */
+    /* Do a dummy read to wake up the XPT2046 */
+    (void)xpt2046_transfer(XPT2046_CMD_X);
+    (void)xpt2046_transfer(XPT2046_CMD_Y);
 
     s_touch_initialized = true;
-    ESP_LOGI(TAG, "FT6336 touch initialized");
+    ESP_LOGI(TAG, "XPT2046 touch initialized (CLK=%d CS=%d MOSI=%d MISO=%d IRQ=%d)",
+             TOUCH_SPI_CLK, TOUCH_SPI_CS, TOUCH_SPI_MOSI, TOUCH_SPI_MISO, TOUCH_IRQ_IO);
     return ESP_OK;
 }
 

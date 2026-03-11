@@ -70,15 +70,16 @@ idf.py -p /dev/ttyUSB0 flash monitor
 
 Helper scripts (repo root):
 
-- `./flash.sh`
-- `./monitor.sh`
+- `./flash-cyd.sh [PORT]` — build + flash + monitor CYD with image loading OFF (default, safer on non-PSRAM boards)
+- `./flash-cyd.sh --image [PORT]` — build + flash + monitor CYD with image loading ON (requires working PSRAM)
+- `./flash-s3.sh [PORT]` — build + flash + monitor the S3 firmware
 
 ### Use (CYD)
 
 1. Boot device.
 2. Pair phone to `CYD Music Player`.
 3. Start playback on phone.
-4. Use on-screen touch controls for transport.
+4. Use on-screen touch controls
 
 ---
 

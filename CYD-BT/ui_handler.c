@@ -44,22 +44,22 @@ static void ui_draw_volume_slider(uint8_t volume)
     display_draw_string(14, 24, vol_label, COLOR_WHITE);
 }
 
-void ui_draw_button(int x, int y, int size, const char *text, bool pressed)
+void ui_draw_button(int x, int y, int w, int h, const char *text, bool pressed)
 {
     uint16_t bg_color = pressed ? COLOR_BLUE : COLOR_DARK_GRAY;
     uint16_t border_color = pressed ? COLOR_CYAN : COLOR_LIGHT_GRAY;
     uint16_t text_color = COLOR_WHITE;
 
-    display_draw_rectangle(x, y, size, size, bg_color);
+    display_draw_rectangle(x, y, w, h, bg_color);
 
-    display_draw_rectangle(x, y, size, 2, border_color);
-    display_draw_rectangle(x, y, 2, size, border_color);
-    display_draw_rectangle(x + size - 2, y, 2, size, border_color);
-    display_draw_rectangle(x, y + size - 2, size, 2, border_color);
+    display_draw_rectangle(x, y, w, 2, border_color);
+    display_draw_rectangle(x, y, 2, h, border_color);
+    display_draw_rectangle(x + w - 2, y, 2, h, border_color);
+    display_draw_rectangle(x, y + h - 2, w, 2, border_color);
 
     int text_len = strlen(text);
-    int text_x = x + (size - text_len * 8) / 2;
-    int text_y = y + (size - 8) / 2;
+    int text_x = x + (w - text_len * 8) / 2;
+    int text_y = y + (h - 8) / 2;
 
     display_draw_string(text_x, text_y, text, text_color);
 }

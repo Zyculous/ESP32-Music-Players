@@ -77,8 +77,6 @@ void app_main(void)
 
     // Main loop
     while (1) {
-           ESP_LOGI(TAG, "[HEARTBEAT] Main loop tick");
-        
         ui_update_display();
         ui_tick_250ms();
 

@@ -148,48 +148,38 @@ static void register_avrc_notifications(void)
 
 static void *alloc_prefer_spiram(size_t size)
 {
-    void *ptr = heap_caps_malloc(size, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    if (ptr) {
-        return ptr;
-    }
-    return heap_caps_malloc(size, MALLOC_CAP_8BIT);
+    // Keep large cover-art buffers in PSRAM only; don't steal Bluedroid heap.
+    return heap_caps_malloc(size, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
 }
 
 static void avrc_cmd_task(void *params)
 {
     (void)params;
     avrc_cmd_job_t job = {0};
-    
-    ESP_LOGI(TAG, "[DIAG] AVRCP command task started");
-
     while (1) {
-        ESP_LOGI(TAG, "[DIAG] AVRCP task waiting for command...");
         if (xQueueReceive(s_avrc_cmd_queue, &job, portMAX_DELAY) != pdTRUE) {
             continue;
         }
 
-        ESP_LOGI(TAG, "[DIAG] AVRCP task received cmd=%d", job.cmd);
-
         if (!s_avrc_ct_enabled) {
-            ESP_LOGW(TAG, "[DIAG] AVRCP controller not enabled, skipping");
             continue;
         }
 
-        ESP_LOGI(TAG, "[DIAG] Sending PRESSED state");
+        // AVRCP passthrough is sent as a press/release pair.
         esp_avrc_ct_send_passthrough_cmd(1, job.cmd, ESP_AVRC_PT_CMD_STATE_PRESSED);
-        ESP_LOGI(TAG, "[DIAG] Delaying 30ms");
         vTaskDelay(pdMS_TO_TICKS(30));
-        ESP_LOGI(TAG, "[DIAG] Sending RELEASED state");
         esp_avrc_ct_send_passthrough_cmd(1, job.cmd, ESP_AVRC_PT_CMD_STATE_RELEASED);
-        ESP_LOGI(TAG, "[DIAG] Command completed");
     }
 }
 
 static void refresh_cover_art_memory_on_skip(void)
 {
     s_cover_art_request_in_progress = false;
-    s_cover_art_disabled_oom = false;
-    s_cover_art_runtime_enabled = true;
+    /* Only re-enable cover art if the RX buffer was successfully allocated. */
+    if (s_cover_art_rx_buffer) {
+        s_cover_art_disabled_oom = false;
+        s_cover_art_runtime_enabled = true;
+    }
     clear_cover_art_rx_buffer();
     s_cover_art_jpeg_profile = 0;
 }
@@ -208,6 +198,7 @@ static void disable_cover_art_for_session(const char *reason)
     }
 
     s_cover_art_disabled_oom = true;
+    s_cover_art_runtime_enabled = false;
     s_cover_art_request_in_progress = false;
     clear_cover_art_rx_buffer();
     clear_cover_art_data();
@@ -847,28 +838,28 @@ void bt_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 
 void send_avrc_command(esp_avrc_pt_cmd_t cmd)
 {
-    ESP_LOGI(TAG, "[DIAG] send_avrc_command START cmd=%d", cmd);
+    // ESP_LOGI(TAG, "[DIAG] send_avrc_command START cmd=%d", cmd);
     if (s_avrc_ct_enabled) {
         if (cmd == ESP_AVRC_PT_CMD_FORWARD || cmd == ESP_AVRC_PT_CMD_BACKWARD) {
-            ESP_LOGI(TAG, "[DIAG] Skip detected, refreshing cover art memory");
+            // ESP_LOGI(TAG, "[DIAG] Skip detected, refreshing cover art memory");
             refresh_cover_art_memory_on_skip();
             request_metadata();
         }
 
         if (s_avrc_cmd_queue) {
             avrc_cmd_job_t job = {.cmd = cmd};
-            ESP_LOGI(TAG, "[DIAG] Queueing command to async task");
+            // ESP_LOGI(TAG, "[DIAG] Queueing command to async task");
             if (xQueueSend(s_avrc_cmd_queue, &job, 0) != pdTRUE) {
                 ESP_LOGW(TAG, "AVRCP cmd queue full, dropping cmd=%d", cmd);
             }
-            ESP_LOGI(TAG, "[DIAG] Command queued successfully");
+            // ESP_LOGI(TAG, "[DIAG] Command queued successfully");
         } else {
-            ESP_LOGW(TAG, "[DIAG] AVRCP cmd queue not initialized!");
+            ESP_LOGW(TAG, "AVRCP cmd queue not initialized");
         }
     } else {
-        ESP_LOGW(TAG, "[DIAG] AVRCP controller not enabled!");
+        ESP_LOGW(TAG, "AVRCP controller not enabled");
     }
-    ESP_LOGI(TAG, "[DIAG] send_avrc_command END");
+    // ESP_LOGI(TAG, "[DIAG] send_avrc_command END");
 }
 
 void bluetooth_send_seek_cmd(bool forward, uint32_t hold_ms)
@@ -917,7 +908,7 @@ void request_cover_art(void)
     }
 
     if (s_avrc_ct_enabled && s_cover_art_connected && s_cover_art_handle_valid) {
-        if (s_cover_art_disabled_oom) {
+        if (s_cover_art_disabled_oom || !s_cover_art_rx_buffer) {
             return;
         }
 
